@@ -1,5 +1,5 @@
 <?php
-require_once '../../config/Conexion.php';
+require_once '../config/Conexion.php';
 
 class Pago
 {
@@ -10,33 +10,13 @@ class Pago
         $this->db = Conexion::getConexion();
     }
 
+
     public function obtenerTodos()
     {
-        $query = "SELECT pg.id, p.nombre, h.diagnostico, h.tratamiento, h.notas, pg.monto, pg.fecha_pago, pg.metodo_pago FROM pagos AS pg
-        INNER JOIN citas AS ct ON ct.id = pg.cita_id
-        INNER JOIN pacientes AS p ON p.id = ct.id_paciente 
-        INNER JOIN historial_medico AS h ON h.id = ct.id_historial ";
+        $query = "SELECT c.nombre, c.telefono, c.email, m.tipo, cm.fecha_inicio, cm.fecha_fin, p.fecha_pago, p.metodo_pago FROM pagos AS p
+        INNER JOIN clientes_membresias AS cm ON p.id_cliente_membresia = cm.id 
+        INNER JOIN clientes AS c ON c.id = cm.id_cliente
+        INNER JOIN membresias AS m ON m.id = cm.id_membresia";
         return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function agregar($id, $cita_id, $monto, $fecha_pago, $metodo_pago)
-    {
-        $query = "INSERT INTO pagos (id, cita_id, monto, fecha_pago, metodo_pago) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $this->db->prepare($query);
-        return $stmt->execute([$id, $cita_id, $monto, $fecha_pago, $metodo_pago]);
-    }
-
-    /*  public function editar($id, $fechaHora, $estado, $id_historial)
-    {
-        $query = "UPDATE citas SET fecha_hora = ?, estado = ?, id_historial = ? WHERE id = ?";
-        $stmt = $this->db->prepare($query);
-        return $stmt->execute([$fechaHora, $estado, $id_historial, $id]);
-    } */
-
-    public function eliminar($id)
-    {
-        $query = "DELETE FROM pagos WHERE id = ?";
-        $stmt = $this->db->prepare($query);
-        return $stmt->execute([$id]);
     }
 }

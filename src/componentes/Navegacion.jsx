@@ -37,7 +37,7 @@ function Navegacion() {
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/pagos">
-                Pagos
+                Clientes/Membresías
               </Link>
             </li>
           </ul>

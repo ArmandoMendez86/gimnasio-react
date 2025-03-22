@@ -12,13 +12,13 @@ class Cliente
 
     public function obtenerTodos()
     {
-        $query = "SELECT * FROM cliente";
+        $query = "SELECT * FROM clientes";
         return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function agregar($nombre, $telefono, $email)
     {
-        $query = "INSERT INTO cliente (nombre, telefono, email) VALUES (?, ?, ?)";
+        $query = "INSERT INTO clientes (nombre, telefono, email) VALUES (?, ?, ?)";
         $stmt = $this->db->prepare($query);
         $stmt->execute([$nombre, $telefono, $email]);
         return $this->db->lastInsertId();
@@ -26,14 +26,14 @@ class Cliente
 
     public function editar($id, $nombre, $telefono, $email)
     {
-        $query = "UPDATE cliente SET nombre = ?, telefono = ?, email = ? WHERE id = ?";
+        $query = "UPDATE clientes SET nombre = ?, telefono = ?, email = ? WHERE id = ?";
         $stmt = $this->db->prepare($query);
         return $stmt->execute([$nombre, $telefono, $email, $id]);
     }
 
     public function eliminar($id)
     {
-        $query = "DELETE FROM cliente WHERE id = ?";
+        $query = "DELETE FROM clientes WHERE id = ?";
         $stmt = $this->db->prepare($query);
         return $stmt->execute([$id]);
     }

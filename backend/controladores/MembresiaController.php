@@ -25,8 +25,8 @@ class MembresiaController
         $data = json_decode(file_get_contents("php://input"), true);
         $resultado = $this->modelo->agregar(
             $data['tipo'],
-            $data['descripcion'],
             $data['precio'],
+            $data['duracion_dias'],
         );
         echo json_encode(["success" => $resultado]);
     }
@@ -38,8 +38,8 @@ class MembresiaController
         $resultado = $this->modelo->editar(
             $data['id'],
             $data['tipo'],
-            $data['descripcion'],
             $data['precio'],
+            $data['duracion_dias'],
         );
         echo json_encode(["success" => $resultado]);
     }

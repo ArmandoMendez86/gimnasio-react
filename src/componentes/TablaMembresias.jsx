@@ -130,17 +130,16 @@ const TablaMembresias = () => {
   const columns = [
     { accessorKey: "id", header: "ID" },
     { accessorKey: "tipo", header: "Tipo" },
-    { accessorKey: "descripcion", header: "Descripción" },
     {
       accessorKey: "precio",
-      header: "Costo",
-
+      header: "Precio",
       Cell: ({ cell }) =>
         new Intl.NumberFormat("es-MX", {
           style: "currency",
           currency: "MXN",
         }).format(cell.getValue()),
     },
+    { accessorKey: "duracion_dias", header: "Duración/Días" },
 
     {
       header: "Acciones",
@@ -195,7 +194,7 @@ const TablaMembresias = () => {
           sx: {
             textTransform: "uppercase",
             fontWeight: "bold",
-            justifyContent: "center",
+            
           },
         }}
       />
@@ -216,18 +215,6 @@ const TablaMembresias = () => {
             }
           />
           <TextField
-            label="Descripción"
-            fullWidth
-            margin="dense"
-            value={tipoMembresia?.descripcion || ""}
-            onChange={(e) =>
-              setTipoMembresia({
-                ...tipoMembresia,
-                descripcion: e.target.value,
-              })
-            }
-          />
-          <TextField
             label="Precio"
             fullWidth
             margin="dense"
@@ -235,6 +222,18 @@ const TablaMembresias = () => {
             value={tipoMembresia?.precio || ""}
             onChange={(e) =>
               setTipoMembresia({ ...tipoMembresia, precio: e.target.value })
+            }
+          />
+           <TextField
+            label="Duración/Días"
+            fullWidth
+            margin="dense"
+            value={tipoMembresia?.duracion_dias || ""}
+            onChange={(e) =>
+              setTipoMembresia({
+                ...tipoMembresia,
+                duracion_dias: e.target.value,
+              })
             }
           />
         </DialogContent>

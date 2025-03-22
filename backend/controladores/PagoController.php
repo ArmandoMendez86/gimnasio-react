@@ -1,4 +1,9 @@
 <?php
+header("Access-Control-Allow-Origin: http://localhost:5173"); // Reemplaza con la URL de tu frontend
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Credentials: true");
+
 require_once '../modelos/Pago.php';
 
 class PagoController
@@ -12,39 +17,66 @@ class PagoController
 
     public function listar()
     {
-        echo json_encode($this->modelo->obtenerTodos());
+        $datos = $this->modelo->obtenerTodos();
+
+        // Ajustar zona horaria
+        $zonaHoraria = 'America/Mexico_City';
+        $fechaActual = new DateTime('now', new DateTimeZone($zonaHoraria));
+
+        // Filtrar solo las fechas que no son menores a fecha_fin
+        $datosFiltrados = array_filter($datos, function ($dato) use ($fechaActual, $zonaHoraria) {
+            if (!$dato['fecha_fin']) {
+                return false; // Si no tiene fecha_fin, lo excluye
+            }
+
+            try {
+                // Convertir a hora local
+                $fechaFin = new DateTime($dato['fecha_fin'], new DateTimeZone('UTC'));
+                $fechaFin->setTimezone(new DateTimeZone($zonaHoraria));
+                return $fechaFin >= $fechaActual; // Solo incluir si la fecha_fin es mayor o igual a la actual
+            } catch (Exception $e) {
+                return false;
+            }
+        });
+
+        // Ajustar fechas y calcular estatus para los datos filtrados
+        foreach ($datosFiltrados as &$dato) {
+            $dato['fecha_inicio'] = $this->convertirFechaLocal($dato['fecha_inicio'], $zonaHoraria);
+            $dato['fecha_fin'] = $this->convertirFechaLocal($dato['fecha_fin'], $zonaHoraria);
+            $dato['fecha_pago'] = $this->convertirFechaLocal($dato['fecha_pago'], $zonaHoraria);
+            $dato['estatus'] = $this->calcularEstatus($dato['fecha_fin'], $fechaActual);
+        }
+
+        echo json_encode(array_values($datosFiltrados));
     }
 
-    public function guardar()
+
+    private function convertirFechaLocal($fecha, $zonaHoraria)
     {
-        $data = json_decode(file_get_contents("php://input"), true);
-        $resultado = $this->modelo->agregar(
-            $data['idPago'],
-            $data['cita_id'],
-            $data['monto'],
-            $data['fecha_pago'],
-            $data['metodo_pago'],
-        );
-        echo json_encode(["success" => $resultado]);
+        if (!$fecha) {
+            return null; // Si la fecha es nula, devolver null
+        }
+        try {
+            $date = new DateTime($fecha, new DateTimeZone('UTC'));
+            $date->setTimezone(new DateTimeZone($zonaHoraria));
+            return $date->format('Y-m-d H:i:s');
+        } catch (Exception $e) {
+            return null;
+        }
     }
 
-    /*  public function editar()
+    private function calcularEstatus($fechaFin, $fechaActual)
     {
-        $data = json_decode(file_get_contents("php://input"), true);
-        $resultado = $this->modelo->editar(
-            $data['idCita'],
-            $data['fechaHora'],
-            $data['estado'],
-            $data['id_historial'],
-        );
-        echo json_encode(["success" => $resultado]);
-    } */
-
-    public function eliminar()
-    {
-        $id = json_decode(file_get_contents("php://input"), true);
-        $resultado = $this->modelo->eliminar($id);
-        echo json_encode(["success" => $resultado]);
+        if (!$fechaFin) {
+            return 'Inactiva';
+        }
+        try {
+            $fechaFin = new DateTime($fechaFin, new DateTimeZone('UTC'));
+            $fechaFin->setTimezone(new DateTimeZone('America/Mexico_City'));
+            return $fechaFin >= $fechaActual ? 'Activa' : 'Inactiva';
+        } catch (Exception $e) {
+            return 'Inactiva';
+        }
     }
 }
 
@@ -54,8 +86,4 @@ $controller = new PagoController();
 
 if ($action == "listar") {
     $controller->listar();
-} elseif ($action == "guardar") {
-    $controller->guardar();
-} elseif ($action == "eliminar") {
-    $controller->eliminar();
 }

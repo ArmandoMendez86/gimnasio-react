@@ -13,28 +13,28 @@ class Membresia
 
     public function obtenerTodos()
     {
-        $query = "SELECT * FROM membresia";
+        $query = "SELECT * FROM membresias";
         return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function agregar($tipo, $descripcion, $precio)
+    public function agregar($tipo, $precio, $duracion_dias)
     {
-        $query = "INSERT INTO membresia (tipo, descripcion, precio) VALUES (?, ?, ?)";
+        $query = "INSERT INTO membresias (tipo, precio, duracion_dias) VALUES (?, ?, ?)";
         $stmt = $this->db->prepare($query);
-        return $stmt->execute([$tipo, $descripcion, $precio]);
+        return $stmt->execute([$tipo, $precio, $duracion_dias]);
     }
 
-    public function editar($id, $tipo, $descripcion, $precio)
+    public function editar($id, $tipo, $precio, $duracion_dias)
     {
 
-        $query = "UPDATE membresia SET  tipo = ?, descripcion = ?, precio = ? WHERE id = ?";
+        $query = "UPDATE membresias SET  tipo = ?, precio = ?, duracion_dias = ? WHERE id = ?";
         $stmt = $this->db->prepare($query);
-        return $stmt->execute([$tipo, $descripcion, $precio,  $id]);
+        return $stmt->execute([$tipo, $precio, $duracion_dias,  $id]);
     }
 
     public function eliminar($id)
     {
-        $query = "DELETE FROM membresia WHERE id = ?";
+        $query = "DELETE FROM membresias WHERE id = ?";
         $stmt = $this->db->prepare($query);
         return $stmt->execute([$id]);
     }
