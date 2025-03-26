@@ -1,5 +1,16 @@
 <?php
-header("Access-Control-Allow-Origin: http://localhost:5173"); // Reemplaza con la URL de tu frontend
+$allowedOrigins = [
+    'http://localhost:5173',
+    'http://192.168.0.7:5173',
+   
+
+];
+
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+if (in_array($origin, $allowedOrigins)) {
+    header("Access-Control-Allow-Origin: $origin");
+}
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Access-Control-Allow-Credentials: true");

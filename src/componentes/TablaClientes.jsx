@@ -13,13 +13,18 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Add";
+import { QRCodeCanvas } from "qrcode.react";
+
+const baseUrl = "http://192.168.0.7:5173";
+const path = "/registro";
 
 const TablaClientes = () => {
   const [clientes, setClientes] = useState([]);
-  const [filtro, setFiltro] = useState(""); // Filtro para búsqueda
-  const [clienteEditando, setClienteEditando] = useState(null); // Cliente que estamos editando o creando
-  const [openDialog, setOpenDialog] = useState(false); // Estado para abrir/cerrar el modal
-  const [nuevoCliente, setNuevoCliente] = useState(false); // Estado para determinar si es nuevo o edición
+  const [filtro, setFiltro] = useState("");
+  const [clienteEditando, setClienteEditando] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [openQr, setOpenQr] = useState(false);
+  const [nuevoCliente, setNuevoCliente] = useState(false);
 
   useEffect(() => {
     fetchClientes();
@@ -28,7 +33,7 @@ const TablaClientes = () => {
   const fetchClientes = async () => {
     try {
       const response = await fetch(
-        "http://localhost/gimnasio/backend/controladores/ClienteController.php?action=listar"
+        "http://192.168.0.7/gimnasio/backend/controladores/ClienteController.php?action=listar"
       );
       const data = await response.json();
       setClientes(data);
@@ -55,7 +60,7 @@ const TablaClientes = () => {
     if (confirmar) {
       try {
         const response = await fetch(
-          "http://localhost/gimnasio/backend/controladores/ClienteController.php?action=eliminar",
+          "http://192.168.0.7/gimnasio/backend/controladores/ClienteController.php?action=eliminar",
           {
             method: "POST",
             body: JSON.stringify(id),
@@ -86,7 +91,7 @@ const TablaClientes = () => {
 
       try {
         const response = await fetch(
-          "http://localhost/gimnasio/backend/controladores/ClienteController.php?action=guardar",
+          "http://192.168.0.7/gimnasio/backend/controladores/ClienteController.php?action=guardar",
           {
             method: "POST",
             body: JSON.stringify(clienteEditando),
@@ -110,7 +115,7 @@ const TablaClientes = () => {
       }
       try {
         const response = await fetch(
-          "http://localhost/gimnasio/backend/controladores/ClienteController.php?action=editar",
+          "http://192.168.0.7/gimnasio/backend/controladores/ClienteController.php?action=editar",
           {
             method: "POST",
             body: JSON.stringify(clienteEditando),
@@ -164,18 +169,30 @@ const TablaClientes = () => {
       <Button
         variant="contained"
         color="info"
-        sx={{ marginBottom: 2 }}
+        sx={{ marginBottom: 2, marginRight:2 }}
         onClick={() => handleAbrirDialog()}
         startIcon={<SaveIcon />}
       >
         Nuevo
+      </Button>
+      <Button
+        variant="contained"
+        color="info"
+        sx={{ marginBottom: 2 }}
+        onClick={() => setOpenQr(true)}
+        startIcon={<SaveIcon />}
+      >
+        QR
       </Button>
 
       {/* 📋 Tabla con paginación y filtros */}
       <MaterialReactTable
         columns={columns}
         data={clientes}
-        initialState={{ pagination: { pageSize: 5 } }}
+        initialState={{
+          pagination: { pageSize: 5 },
+          columnVisibility: { id: false },
+        }}
         enablePagination={true}
         enableColumnFilters={true}
         enableGlobalFilter={true}
@@ -227,6 +244,12 @@ const TablaClientes = () => {
             {nuevoCliente ? "Crear" : "Guardar"}
           </Button>
         </DialogActions>
+      </Dialog>
+      <Dialog open={openQr} onClose={() => setOpenQr(false)}>
+        <DialogTitle sx={{textAlign:'center'}}>NUEVO CLIENTE</DialogTitle>
+        <DialogContent sx={{ display: "flex", justifyContent: "center" }}>
+          <QRCodeCanvas value={`${baseUrl}${path}`} size={200} />
+        </DialogContent>
       </Dialog>
     </Box>
   );

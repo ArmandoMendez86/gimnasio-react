@@ -28,10 +28,11 @@ const TablaMembresias = () => {
   const fetchMembresias = async () => {
     try {
       const response = await fetch(
-        "http://localhost/gimnasio/backend/controladores/MembresiaController.php?action=listar"
+        "http://192.168.0.7/gimnasio/backend/controladores/MembresiaController.php?action=listar"
       );
       const data = await response.json();
       setMembresias(data);
+     
     } catch (error) {
       console.error("Error al obtener membresías:", error);
     }
@@ -55,7 +56,7 @@ const TablaMembresias = () => {
     if (confirmar) {
       try {
         const response = await fetch(
-          "http://localhost/gimnasio/backend/controladores/MembresiaController.php?action=eliminar",
+          "http://192.168.0.7/gimnasio/backend/controladores/MembresiaController.php?action=eliminar",
           {
             method: "POST",
             body: JSON.stringify(id),
@@ -86,7 +87,7 @@ const TablaMembresias = () => {
 
       try {
         const response = await fetch(
-          "http://localhost/gimnasio/backend/controladores/MembresiaController.php?action=guardar",
+          "http://192.168.0.7/gimnasio/backend/controladores/MembresiaController.php?action=guardar",
           {
             method: "POST",
             body: JSON.stringify(tipoMembresia),
@@ -110,7 +111,7 @@ const TablaMembresias = () => {
       }
       try {
         const response = await fetch(
-          "http://localhost/gimnasio/backend/controladores/MembresiaController.php?action=editar",
+          "http://192.168.0.7/gimnasio/backend/controladores/MembresiaController.php?action=editar",
           {
             method: "POST",
             body: JSON.stringify(tipoMembresia),
@@ -183,7 +184,7 @@ const TablaMembresias = () => {
       <MaterialReactTable
         columns={columns}
         data={membresias}
-        initialState={{ pagination: { pageSize: 5 } }}
+        initialState={{ pagination: { pageSize: 5 }, columnVisibility: { id: false } }}
         enablePagination={true}
         enableColumnFilters={true}
         enableGlobalFilter={true}

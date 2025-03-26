@@ -13,44 +13,131 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Add";
+import AgregarCliente from "./AgregarCliente";
+import AgregarMembresia from "./AgregarMembresia";
+import dayjs from "dayjs";
+import "dayjs/locale/es";
 
 const TablaPagos = () => {
   const [pagos, setPagos] = useState([]);
   const [filtro, setFiltro] = useState("");
-
-  
+  const [dialogCliente, setDialogCliente] = useState(false);
+  const [dialogMembresia, setDialogMembresia] = useState(false);
 
   useEffect(() => {
-    fetchPagos();
+    fetchMembresiasClientes();
   }, []);
 
-  const fetchPagos = async () => {
+  const fetchMembresiasClientes = async () => {
     try {
       const response = await fetch(
-        "http://localhost/gimnasio/backend/controladores/PagoController.php?action=listar"
+        "http://192.168.0.7/gimnasio/backend/controladores/MembresiaClienteController.php?action=listar"
       );
       const data = await response.json();
-      
+
       setPagos(data);
     } catch (error) {
       console.error("Error al obtener pagos:", error);
     }
   };
 
+  async function agregarCliente(cliente) {
+    try {
+      const response = await fetch(
+        "http://192.168.0.7/gimnasio/backend/controladores/ClienteController.php?action=guardar",
+        {
+          method: "POST",
+          body: JSON.stringify(cliente),
+        }
+      );
+      const data = await response.json();
+
+      if (data.success) {
+        setDialogCliente(false);
+      }
+    } catch (error) {
+      console.error("Error al guardar cliente:", error);
+    }
+  }
+
+  async function agregarMembresia(registroMembresia) {
+    try {
+      const response = await fetch(
+        "http://192.168.0.7/gimnasio/backend/controladores/MembresiaClienteController.php?action=guardar",
+        {
+          method: "POST",
+          body: JSON.stringify(registroMembresia),
+        }
+      );
+      const data = await response.json();
+
+      if (data.success) {
+        setDialogMembresia(false);
+        fetchMembresiasClientes();
+      }
+    } catch (error) {
+      console.error("Error al guardar membresía del cliente:", error);
+    }
+  }
+
   const columns = [
-    { accessorKey: "nombre", header: "Nombre" },
-    { accessorKey: "telefono", header: "Teléfono" },
-    { accessorKey: "email", header: "Correo" },
-    { accessorKey: "tipo", header: "Membresía" },
-    { accessorKey: "fecha_inicio", header: "Inicia" },
-    { accessorKey: "fecha_fin", header: "Termina" },
-    { accessorKey: "fecha_pago", header: "Pagó" },
-    { accessorKey: "metodo_pago", header: "Modo" },
-    { accessorKey: "estatus", header: "Estatus" },
+    {
+      accessorKey: "nombre",
+      header: "Nombre",
+      muiTableBodyCellProps: { sx: {  textTransform:'upperCase' } },
+    },
+    {
+      accessorKey: "telefono",
+      header: "Teléfono",
+      muiTableBodyCellProps: { sx: { textAlign: "center", textTransform:'upperCase' } },
+    },
+    {
+      accessorKey: "email",
+      header: "Correo",
+      muiTableBodyCellProps: { sx: { textTransform:'upperCase' } },
+    },
+    {
+      accessorKey: "tipo",
+      header: "Membresía",
+      muiTableBodyCellProps: { sx: { textAlign: "center", textTransform:'upperCase' } },
+    },
+    {
+      accessorKey: "fecha_inicio",
+      header: "Inicia",
+      Cell: ({ cell }) =>
+        dayjs(cell.getValue()).locale("es").format("DD/MMM/YYYY"),
+      muiTableBodyCellProps: { sx: { textAlign: "center" } },
+    },
+    {
+      accessorKey: "fecha_fin",
+      header: "Termina",
+      Cell: ({ cell }) =>
+        dayjs(cell.getValue()).locale("es").format("DD/MMM/YYYY"),
+      muiTableBodyCellProps: { sx: { textAlign: "center" } },
+    },
   ];
 
   return (
-    <Box sx={{ padding: 2, textAlign: "right" }}>
+    <Box sx={{ padding: 2 }}>
+      <Button
+        variant="contained"
+        color="info"
+        sx={{ marginBottom: 2 }}
+        onClick={() => setDialogCliente(true)}
+        startIcon={<SaveIcon />}
+      >
+        Nuevo Cliente
+      </Button>
+      <Button
+        variant="contained"
+        color="info"
+        sx={{ marginBottom: 2, marginLeft: 2 }}
+        onClick={() => setDialogMembresia(true)}
+        startIcon={<SaveIcon />}
+      >
+        Nueva Membresía
+      </Button>
+
       {/* 📋 Tabla con paginación y filtros */}
       <MaterialReactTable
         columns={columns}
@@ -69,6 +156,36 @@ const TablaPagos = () => {
           },
         }}
       />
+
+      <Dialog open={dialogCliente} onClose={() => setDialogCliente(false)}>
+        <DialogContent>
+          <AgregarCliente agregarCliente={agregarCliente} />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={() => setDialogCliente(false)}
+          >
+            Cancelar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={dialogMembresia} onClose={() => setDialogMembresia(false)}>
+        <DialogContent>
+          <AgregarMembresia agregarMembresia={agregarMembresia} />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={() => setDialogMembresia(false)}
+          >
+            Cancelar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

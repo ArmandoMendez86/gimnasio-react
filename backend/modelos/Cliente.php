@@ -12,7 +12,7 @@ class Cliente
 
     public function obtenerTodos()
     {
-        $query = "SELECT * FROM clientes";
+        $query = "SELECT id, nombre, telefono, email FROM clientes";
         return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 

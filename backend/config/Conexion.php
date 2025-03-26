@@ -2,7 +2,7 @@
 class Conexion
 {
     private static $host = "localhost";
-    private static $dbname = "gym";
+    private static $dbname = "bd_gimnasio";
     private static $usuario = "root"; 
     private static $password = "linux"; 
 
