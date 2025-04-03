@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function Navegacion() {
+function Navegacion({ config }) {
   return (
     <nav className="navbar navbar-expand-lg bg-light">
       <div className="container-fluid">
@@ -17,7 +17,22 @@ function Navegacion() {
         </button>
         <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
           <a className="navbar-brand" href="#">
-            Hidden brand
+            <img
+              style={{
+                width: "80px",
+                height: "80px",
+                objectFit: "cover",
+                borderRadius: "50%",
+              }}
+              src={
+                config
+                  ? config.img
+                    ? `/backend/img_clientes/${config.img}`
+                    : "/backend/img_clientes/logo_ejemplo.png"
+                  : "/backend/img_clientes/logo_ejemplo.png"
+              }
+              alt=""
+            />
           </a>
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
@@ -38,6 +53,11 @@ function Navegacion() {
             <li className="nav-item">
               <Link className="nav-link" to="/pagos">
                 Clientes/Membresías
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/configuracion">
+                Configuración
               </Link>
             </li>
           </ul>

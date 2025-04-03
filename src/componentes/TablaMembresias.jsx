@@ -32,7 +32,6 @@ const TablaMembresias = () => {
       );
       const data = await response.json();
       setMembresias(data);
-     
     } catch (error) {
       console.error("Error al obtener membresías:", error);
     }
@@ -63,8 +62,11 @@ const TablaMembresias = () => {
           }
         );
         const data = await response.json();
-
-        fetchMembresias();
+        if (data.error) {
+          alert(data.error);
+        } else {
+          fetchMembresias();
+        }
       } catch (error) {
         console.error("Error al guardar cliente:", error);
       }
@@ -129,21 +131,70 @@ const TablaMembresias = () => {
   };
 
   const columns = [
-    { accessorKey: "id", header: "ID" },
-    { accessorKey: "tipo", header: "Tipo" },
+    {
+      accessorKey: "id",
+      header: "ID",
+      muiTableHeadCellProps: {
+        align: "center", // Centrar el encabezado
+      },
+      muiTableBodyCellProps: {
+        sx: {
+          textAlign: "center",
+          textTransform: "upperCase",
+        },
+      },
+    },
+    {
+      accessorKey: "tipo",
+      header: "Tipo",
+      muiTableHeadCellProps: {
+        align: "center", // Centrar el encabezado
+      },
+      muiTableBodyCellProps: {
+        sx: {
+          textAlign: "center",
+          textTransform: "upperCase",
+        },
+      },
+    },
     {
       accessorKey: "precio",
       header: "Precio",
+      muiTableHeadCellProps: {
+        align: "center", // Centrar el encabezado
+      },
+      muiTableBodyCellProps: {
+        sx: {
+          textAlign: "center",
+          textTransform: "upperCase",
+        },
+      },
       Cell: ({ cell }) =>
         new Intl.NumberFormat("es-MX", {
           style: "currency",
           currency: "MXN",
         }).format(cell.getValue()),
     },
-    { accessorKey: "duracion_dias", header: "Duración/Días" },
+    {
+      accessorKey: "duracion_dias",
+      header: "Duración/Días",
+      muiTableHeadCellProps: {
+        align: "center", // Centrar el encabezado
+      },
+      muiTableBodyCellProps: {
+        sx: {
+          textAlign: "center",
+          textTransform: "upperCase",
+        },
+      },
+    },
 
     {
       header: "Acciones",
+      muiTableHeadCellProps: {
+        align: "center", // Centrar el encabezado
+      },
+
       Cell: ({ row }) => (
         <Box sx={{ display: "flex", gap: "8px", justifyContent: "center" }}>
           <Button
@@ -184,7 +235,10 @@ const TablaMembresias = () => {
       <MaterialReactTable
         columns={columns}
         data={membresias}
-        initialState={{ pagination: { pageSize: 5 }, columnVisibility: { id: false } }}
+        initialState={{
+          pagination: { pageSize: 5 },
+          columnVisibility: { id: false },
+        }}
         enablePagination={true}
         enableColumnFilters={true}
         enableGlobalFilter={true}
@@ -195,7 +249,6 @@ const TablaMembresias = () => {
           sx: {
             textTransform: "uppercase",
             fontWeight: "bold",
-            
           },
         }}
       />
@@ -225,7 +278,7 @@ const TablaMembresias = () => {
               setTipoMembresia({ ...tipoMembresia, precio: e.target.value })
             }
           />
-           <TextField
+          <TextField
             label="Duración/Días"
             fullWidth
             margin="dense"

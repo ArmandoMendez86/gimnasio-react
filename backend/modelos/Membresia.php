@@ -34,8 +34,17 @@ class Membresia
 
     public function eliminar($id)
     {
-        $query = "DELETE FROM membresias WHERE id = ?";
-        $stmt = $this->db->prepare($query);
-        return $stmt->execute([$id]);
+        try {
+            $query = "DELETE FROM membresias WHERE id = ?";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([$id]);
+            return true;
+        } catch (PDOException $e) {
+            if ($e->getCode() == '23000') { // Código de error para restricciones de integridad
+                return ['error' => 'No se puede eliminar la membresía porque tiene clientes asociads.'];
+            } else {
+                return ['error' => 'Error al eliminar la membresía.'];
+            }
+        }
     }
 }

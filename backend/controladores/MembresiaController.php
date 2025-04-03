@@ -2,7 +2,7 @@
 $allowedOrigins = [
     'http://localhost:5173',
     'http://192.168.0.7:5173',
- 
+
 
 ];
 
@@ -59,7 +59,12 @@ class MembresiaController
     {
         $id = json_decode(file_get_contents("php://input"), true);
         $resultado = $this->modelo->eliminar($id);
-        echo json_encode(["success" => $resultado]);
+
+        if (is_array($resultado) && isset($resultado['error'])) {
+            echo json_encode($resultado);
+        } else {
+            echo json_encode(['success' => true]);
+        }
     }
 }
 

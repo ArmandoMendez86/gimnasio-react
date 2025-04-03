@@ -84,26 +84,53 @@ const TablaPagos = () => {
     {
       accessorKey: "nombre",
       header: "Nombre",
-      muiTableBodyCellProps: { sx: {  textTransform:'upperCase' } },
+      muiTableHeadCellProps: {
+        align: "center", 
+      },
+      muiTableBodyCellProps: { sx: { textTransform: "upperCase" } },
     },
     {
       accessorKey: "telefono",
       header: "Teléfono",
-      muiTableBodyCellProps: { sx: { textAlign: "center", textTransform:'upperCase' } },
+      muiTableHeadCellProps: {
+        align: "center", 
+      },
+      muiTableBodyCellProps: {
+        sx: {
+          textAlign: "center",
+          textTransform: "upperCase",
+        },
+      },
     },
     {
       accessorKey: "email",
       header: "Correo",
-      muiTableBodyCellProps: { sx: { textTransform:'upperCase' } },
+      muiTableHeadCellProps: {
+        align: "center", 
+      },
+      muiTableBodyCellProps: {
+        sx: { textTransform: "upperCase", textAlign: "center" },
+      },
     },
     {
       accessorKey: "tipo",
       header: "Membresía",
-      muiTableBodyCellProps: { sx: { textAlign: "center", textTransform:'upperCase' } },
+      muiTableHeadCellProps: {
+        align: "center", 
+      },
+      muiTableBodyCellProps: {
+        sx: {
+          textAlign: "center",
+          textTransform: "upperCase",
+        },
+      },
     },
     {
       accessorKey: "fecha_inicio",
       header: "Inicia",
+      muiTableHeadCellProps: {
+        align: "center", 
+      },
       Cell: ({ cell }) =>
         dayjs(cell.getValue()).locale("es").format("DD/MMM/YYYY"),
       muiTableBodyCellProps: { sx: { textAlign: "center" } },
@@ -111,6 +138,9 @@ const TablaPagos = () => {
     {
       accessorKey: "fecha_fin",
       header: "Termina",
+      muiTableHeadCellProps: {
+        align: "center", 
+      },
       Cell: ({ cell }) =>
         dayjs(cell.getValue()).locale("es").format("DD/MMM/YYYY"),
       muiTableBodyCellProps: { sx: { textAlign: "center" } },
@@ -119,24 +149,26 @@ const TablaPagos = () => {
 
   return (
     <Box sx={{ padding: 2 }}>
-      <Button
-        variant="contained"
-        color="info"
-        sx={{ marginBottom: 2 }}
-        onClick={() => setDialogCliente(true)}
-        startIcon={<SaveIcon />}
-      >
-        Nuevo Cliente
-      </Button>
-      <Button
-        variant="contained"
-        color="info"
-        sx={{ marginBottom: 2, marginLeft: 2 }}
-        onClick={() => setDialogMembresia(true)}
-        startIcon={<SaveIcon />}
-      >
-        Nueva Membresía
-      </Button>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <Button
+          variant="contained"
+          color="info"
+          sx={{ marginBottom: 2 }}
+          onClick={() => setDialogCliente(true)}
+          startIcon={<SaveIcon />}
+        >
+          Nuevo Cliente
+        </Button>
+        <Button
+          variant="contained"
+          color="info"
+          sx={{ marginBottom: 2, marginLeft: 2 }}
+          onClick={() => setDialogMembresia(true)}
+          startIcon={<SaveIcon />}
+        >
+          Nueva Membresía
+        </Button>
+      </div>
 
       {/* 📋 Tabla con paginación y filtros */}
       <MaterialReactTable

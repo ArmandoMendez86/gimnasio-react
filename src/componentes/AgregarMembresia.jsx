@@ -97,7 +97,7 @@ const AgregarMembresia = ({ agregarMembresia }) => {
         sx={{ mt: 2, p: 3, boxShadow: 3, borderRadius: 2, bgcolor: "white" }}
       >
         <Typography variant="h5" sx={{ mb: 2 }}>
-          Agregar Membresía
+          Asignar Membresía
         </Typography>
         <form onSubmit={handleSubmit}>
           {/* Autocomplete para Clientes */}
@@ -184,7 +184,7 @@ const AgregarMembresia = ({ agregarMembresia }) => {
             color="primary"
             sx={{ mt: 2 }}
           >
-            Registrar Membresía
+            Asignar
           </Button>
         </form>
       </Box>

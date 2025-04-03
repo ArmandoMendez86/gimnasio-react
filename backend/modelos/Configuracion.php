@@ -1,7 +1,7 @@
 <?php
 require_once '../config/Conexion.php';
 
-class Cliente
+class Configuracion
 {
     private $db;
 
@@ -12,21 +12,17 @@ class Cliente
 
     public function obtenerTodos()
     {
-        $query = "SELECT id, nombre, telefono, email, img FROM clientes";
+        $query = "SELECT id, razon, img FROM configuracion";
         return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function verificarCorreo($correo)
-    {
-        $query = "SELECT email FROM clientes WHERE email = '$correo'";
-        return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
-    }
 
-    public function agregar($nombre, $telefono, $email, $imagen)
+
+    public function agregar($razon, $imagen)
     {
-        $query = "INSERT INTO clientes (nombre, telefono, email, img) VALUES (?, ?, ?, ?)";
+        $query = "INSERT INTO configuracion (razon,  img) VALUES (?, ?)";
         $stmt = $this->db->prepare($query);
-        $stmt->execute([$nombre, $telefono, $email, $imagen]);
+        $stmt->execute([$razon, $imagen]);
         return $this->db->lastInsertId();
     }
 

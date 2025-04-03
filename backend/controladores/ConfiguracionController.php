@@ -15,15 +15,15 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Access-Control-Allow-Credentials: true");
 
-require_once '../modelos/Cliente.php';
+require_once '../modelos/Configuracion.php';
 
-class ClienteController
+class ConfiguracionController
 {
     private $modelo;
 
     public function __construct()
     {
-        $this->modelo = new Cliente();
+        $this->modelo = new Configuracion();
     }
 
     public function listar()
@@ -31,12 +31,7 @@ class ClienteController
         echo json_encode($this->modelo->obtenerTodos());
     }
 
-    public function verificarCorreo()
-    {
-        $data = json_decode(file_get_contents("php://input"), true);
-        $correo = $data['email'];
-        echo json_encode($this->modelo->verificarCorreo($correo));
-    }
+
 
     public function guardar()
     {
@@ -57,18 +52,14 @@ class ClienteController
             } else {
                 $nombreImagen = null;
             }
-            $nombre = $_POST['nombre'];
-            $telefono = $_POST['telefono'];
-            $email = $_POST['email'];
+            $razon = $_POST['razon'];
 
-            if (empty($nombre) || empty($telefono) || empty($email)) {
+            if (empty($razon)) {
                 echo json_encode(['error' => 'Datos incompletos']);
                 return;
             }
             $resultado = $this->modelo->agregar(
-                $nombre,
-                $telefono,
-                $email,
+                $razon,
                 $nombreImagen
             );
 
@@ -78,14 +69,15 @@ class ClienteController
         }
     }
 
-    public function editar() {
+    public function editar()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Manejar la subida de la imagen (si se proporciona)
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
                 $extension = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
                 $nombreArchivo = uniqid('img_') . '.' . $extension;
                 $rutaArchivo = '../img_clientes/' . $nombreArchivo;
-    
+
                 if (move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaArchivo)) {
                     $nombreImagen = $nombreArchivo;
                 } else {
@@ -95,19 +87,19 @@ class ClienteController
             } else {
                 $nombreImagen = null; // No se subió imagen o hubo un error
             }
-    
+
             // Manejar los datos de texto
             $id = $_POST['id'];
             $nombre = $_POST['nombre'];
             $telefono = $_POST['telefono'];
             $email = $_POST['email'];
-    
+
             // Validar los datos
             if (empty($id) || empty($nombre) || empty($telefono) || empty($email)) {
                 echo json_encode(['error' => 'Datos incompletos']);
                 return;
             }
-    
+
             // Llamar al modelo para editar los datos y la imagen
             $resultado = $this->modelo->editar(
                 $id,
@@ -116,7 +108,7 @@ class ClienteController
                 $email,
                 $nombreImagen // Pasar el nombre de la imagen al modelo
             );
-    
+
             echo json_encode(['success' => $resultado]);
         } else {
             echo json_encode(['error' => 'Método no permitido']);
@@ -137,7 +129,7 @@ class ClienteController
 }
 
 $action = $_GET['action'] ?? '';
-$controller = new ClienteController();
+$controller = new ConfiguracionController();
 
 if ($action == "listar") {
     $controller->listar();
@@ -147,6 +139,4 @@ if ($action == "listar") {
     $controller->editar();
 } elseif ($action == "eliminar") {
     $controller->eliminar();
-} elseif ($action == "checarcorreo") {
-    $controller->verificarCorreo();
 }

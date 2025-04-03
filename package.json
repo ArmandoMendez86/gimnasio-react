@@ -16,10 +16,12 @@
     "@mui/material": "^6.4.8",
     "@tanstack/react-table": "^8.21.2",
     "dayjs": "^1.11.13",
+    "html-to-image": "^1.11.13",
     "material-react-table": "^3.2.1",
     "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-image-file-resizer": "^0.4.8",
     "react-router-dom": "^7.4.0"
   },
   "devDependencies": {
