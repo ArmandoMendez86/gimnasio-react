@@ -38,7 +38,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Inicio />} />
           <Route path="/clientes" element={<Clientes config={config} />} />
-          <Route path="/membresias" element={<Membresias />} />
           <Route path="/pagos" element={<Pagos />} />
           <Route path="/registro" element={<RegistroCliente />} />
           <Route path="/configuracion" element={<VistaConfiguracion />} />

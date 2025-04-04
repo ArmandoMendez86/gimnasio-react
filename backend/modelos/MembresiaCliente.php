@@ -15,7 +15,7 @@ class MembresiaCliente
     {
         $query = "SELECT c.nombre, c.telefono, c.email, m.tipo, cm.fecha_inicio, cm.fecha_fin FROM clientes_membresias AS cm
         INNER JOIN clientes AS c ON c.id = cm.id_cliente
-        INNER JOIN membresias AS m ON m.id = cm.id_membresia";
+        INNER JOIN membresias AS m ON m.id = cm.id_membresia ORDER BY cm.fecha_inicio DESC";
         return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 

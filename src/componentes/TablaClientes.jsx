@@ -9,17 +9,17 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Input, // Importamos Input para el input de archivo
-  IconButton, // Importamos IconButton para el botón de eliminar imagen
+  Input,
+  IconButton,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Add";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import ClearIcon from "@mui/icons-material/Clear"; // Importamos ClearIcon
+import ClearIcon from "@mui/icons-material/Clear";
 import { QRCodeCanvas } from "qrcode.react";
 import { verificarCorreo } from "../Utileria";
-import Resizer from "react-image-file-resizer"; // Importamos Resizer
+import Resizer from "react-image-file-resizer";
 import InfoCliente from "./InfoCliente";
 import AgregarCliente from "./AgregarCliente";
 
@@ -181,12 +181,12 @@ const TablaClientes = ({ config }) => {
       }
       try {
         const formData = new FormData();
-        formData.append("id", clienteEditando.id); // Incluir el ID del cliente
+        formData.append("id", clienteEditando.id);
         formData.append("nombre", clienteEditando.nombre);
         formData.append("telefono", clienteEditando.telefono);
         formData.append("email", clienteEditando.email);
         if (imagenArchivo) {
-          formData.append("imagen", imagenArchivo); // Enviar el archivo de imagen si se seleccionó
+          formData.append("imagen", imagenArchivo);
         }
 
         const response = await fetch(
@@ -208,8 +208,14 @@ const TablaClientes = ({ config }) => {
   };
 
   const detalleCliente = (cliente) => {
-    setClienteEditando(cliente);
-    setOpenDetalles(true);
+    if (config?.razon) {
+      setClienteEditando(cliente);
+      setOpenDetalles(true);
+    } else {
+      alert(
+        "Ingresa el nombre de tu negocio en Configuracion, para poder generar la credencial!"
+      );
+    }
   };
 
   const columns = [
@@ -268,6 +274,8 @@ const TablaClientes = ({ config }) => {
       Cell: ({ row }) => (
         <Box sx={{ display: "flex", gap: "8px", justifyContent: "center" }}>
           <Button
+            data-bs-toggle="tooltip"
+            title="Editar Cliente"
             variant="contained"
             color="white"
             size="small"
@@ -276,6 +284,8 @@ const TablaClientes = ({ config }) => {
             <EditIcon />
           </Button>
           <Button
+            data-bs-toggle="tooltip"
+            title="Eliminar Cliente"
             variant="contained"
             color="white"
             size="small"
@@ -284,6 +294,8 @@ const TablaClientes = ({ config }) => {
             <DeleteIcon />
           </Button>
           <Button
+            data-bs-toggle="tooltip"
+            title="Ver/Crear Credencial"
             variant="contained"
             color="white"
             size="small"
@@ -301,7 +313,7 @@ const TablaClientes = ({ config }) => {
       {/* Botón para crear un nuevo cliente */}
       <Button
         variant="contained"
-        color="info"
+        color="warning"
         sx={{ marginBottom: 2, marginRight: 2 }}
         onClick={() => handleAbrirDialog()}
         startIcon={<SaveIcon />}
@@ -310,7 +322,7 @@ const TablaClientes = ({ config }) => {
       </Button>
       <Button
         variant="contained"
-        color="info"
+        color="warning"
         sx={{ marginBottom: 2 }}
         onClick={() => setOpenQr(true)}
         startIcon={<SaveIcon />}
@@ -385,15 +397,15 @@ const TablaClientes = ({ config }) => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>Cancelar</Button>
-          <Button onClick={handleGuardarCliente} color="primary">
+          <Button variant="contained" onClick={() => setOpenDialog(false)} color="secondary">Cancelar</Button>
+          <Button variant="contained" onClick={handleGuardarCliente} color="secondary">
             {nuevoCliente ? "Crear" : "Guardar"}
           </Button>
         </DialogActions>
       </Dialog>
       {/* Ventana para QR */}
       <Dialog open={openQr} onClose={() => setOpenQr(false)}>
-        <DialogTitle sx={{ textAlign: "center" }}>NUEVO CLIENTE</DialogTitle>
+        <DialogTitle sx={{ textAlign: "center" }}>Escanee el QR</DialogTitle>
         <DialogContent sx={{ display: "flex", justifyContent: "center" }}>
           <QRCodeCanvas value={`${baseUrl}${path}`} size={200} />
         </DialogContent>

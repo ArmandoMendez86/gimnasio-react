@@ -85,7 +85,7 @@ const TablaPagos = () => {
       accessorKey: "nombre",
       header: "Nombre",
       muiTableHeadCellProps: {
-        align: "center", 
+        align: "center",
       },
       muiTableBodyCellProps: { sx: { textTransform: "upperCase" } },
     },
@@ -93,7 +93,7 @@ const TablaPagos = () => {
       accessorKey: "telefono",
       header: "Teléfono",
       muiTableHeadCellProps: {
-        align: "center", 
+        align: "center",
       },
       muiTableBodyCellProps: {
         sx: {
@@ -106,7 +106,7 @@ const TablaPagos = () => {
       accessorKey: "email",
       header: "Correo",
       muiTableHeadCellProps: {
-        align: "center", 
+        align: "center",
       },
       muiTableBodyCellProps: {
         sx: { textTransform: "upperCase", textAlign: "center" },
@@ -116,7 +116,7 @@ const TablaPagos = () => {
       accessorKey: "tipo",
       header: "Membresía",
       muiTableHeadCellProps: {
-        align: "center", 
+        align: "center",
       },
       muiTableBodyCellProps: {
         sx: {
@@ -129,7 +129,7 @@ const TablaPagos = () => {
       accessorKey: "fecha_inicio",
       header: "Inicia",
       muiTableHeadCellProps: {
-        align: "center", 
+        align: "center",
       },
       Cell: ({ cell }) =>
         dayjs(cell.getValue()).locale("es").format("DD/MMM/YYYY"),
@@ -139,7 +139,7 @@ const TablaPagos = () => {
       accessorKey: "fecha_fin",
       header: "Termina",
       muiTableHeadCellProps: {
-        align: "center", 
+        align: "center",
       },
       Cell: ({ cell }) =>
         dayjs(cell.getValue()).locale("es").format("DD/MMM/YYYY"),
@@ -152,21 +152,21 @@ const TablaPagos = () => {
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Button
           variant="contained"
-          color="info"
+          color="warning"
           sx={{ marginBottom: 2 }}
           onClick={() => setDialogCliente(true)}
           startIcon={<SaveIcon />}
         >
-          Nuevo Cliente
+          Cliente
         </Button>
         <Button
           variant="contained"
-          color="info"
+          color="warning"
           sx={{ marginBottom: 2, marginLeft: 2 }}
           onClick={() => setDialogMembresia(true)}
           startIcon={<SaveIcon />}
         >
-          Nueva Membresía
+          Membresía
         </Button>
       </div>
 
@@ -191,32 +191,30 @@ const TablaPagos = () => {
 
       <Dialog open={dialogCliente} onClose={() => setDialogCliente(false)}>
         <DialogContent>
-          <AgregarCliente agregarCliente={agregarCliente} />
+          <div className="text-end ">
+            <Button
+              style={{ color: "red", fontSize: "1.3rem" }}
+              onClick={() => setDialogCliente(false)}
+            >
+              X
+            </Button>
+          </div>
+          <AgregarCliente />
         </DialogContent>
-        <DialogActions>
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={() => setDialogCliente(false)}
-          >
-            Cancelar
-          </Button>
-        </DialogActions>
       </Dialog>
 
-      <Dialog open={dialogMembresia} onClose={() => setDialogMembresia(false)}>
+      <Dialog fullWidth maxWidth="sm" open={dialogMembresia} onClose={() => setDialogMembresia(false)}>
         <DialogContent>
+          <div className="text-end">
+            <Button
+              style={{ color: "red", fontSize: "1.3rem" }}
+              onClick={() => setDialogMembresia(false)}
+            >
+              X
+            </Button>
+          </div>
           <AgregarMembresia agregarMembresia={agregarMembresia} />
         </DialogContent>
-        <DialogActions>
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={() => setDialogMembresia(false)}
-          >
-            Cancelar
-          </Button>
-        </DialogActions>
       </Dialog>
     </Box>
   );

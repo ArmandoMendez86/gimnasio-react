@@ -61,7 +61,7 @@ class ClienteController
             $telefono = $_POST['telefono'];
             $email = $_POST['email'];
 
-            if (empty($nombre) || empty($telefono) || empty($email)) {
+            if (empty($nombre) || empty($telefono)) {
                 echo json_encode(['error' => 'Datos incompletos']);
                 return;
             }

@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 function Navegacion({ config }) {
   return (
-    <nav className="navbar navbar-expand-lg bg-light">
+    <nav
+      className="navbar navbar-expand-lg"
+      style={{ backgroundColor: "#343A40" }}
+    >
       <div className="container-fluid">
         <button
           className="navbar-toggler"
@@ -36,27 +40,27 @@ function Navegacion({ config }) {
           </a>
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="/">
+              <Link
+                className="nav-link active text-white"
+                aria-current="page"
+                to="/"
+              >
                 Inicio
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/clientes">
+              <Link className="nav-link text-white" to="/clientes">
                 Clientes
               </Link>
             </li>
+
             <li className="nav-item">
-              <Link className="nav-link" to="/membresias">
-                Membresías
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/pagos">
+              <Link className="nav-link text-white" to="/pagos">
                 Clientes/Membresías
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/configuracion">
+              <Link className="nav-link text-white" to="/configuracion">
                 Configuración
               </Link>
             </li>
@@ -68,8 +72,13 @@ function Navegacion({ config }) {
               placeholder="Search"
               aria-label="Search"
             />
-            <button className="btn btn-outline-success" type="submit">
-              Search
+            <button
+              data-bs-toggle="tooltip"
+              title="Salir del sistema"
+              className="btn btn-danger"
+              type="submit"
+            >
+              <LogoutIcon />
             </button>
           </form>
         </div>

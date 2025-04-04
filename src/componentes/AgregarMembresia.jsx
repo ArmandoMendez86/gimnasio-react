@@ -10,8 +10,10 @@ import {
   MenuItem,
   Autocomplete,
   styled,
+  Input,
 } from "@mui/material";
 import dayjs from "dayjs";
+
 
 const AgregarMembresia = ({ agregarMembresia }) => {
   const [registroMembresia, setRegistroMembresia] = useState({
@@ -25,7 +27,7 @@ const AgregarMembresia = ({ agregarMembresia }) => {
 
   useEffect(() => {
     fetchClientes();
-    fetchMembresias()
+    fetchMembresias();
   }, []);
 
   const fetchClientes = async () => {
@@ -88,13 +90,13 @@ const AgregarMembresia = ({ agregarMembresia }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     agregarMembresia(registroMembresia);
-    fetchMembresias()
+    fetchMembresias();
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container>
       <Box
-        sx={{ mt: 2, p: 3, boxShadow: 3, borderRadius: 2, bgcolor: "white" }}
+        sx={{ p: 3, boxShadow: 3, borderRadius: 2, bgcolor: "white" }}
       >
         <Typography variant="h5" sx={{ mb: 2 }}>
           Asignar Membresía
@@ -104,7 +106,7 @@ const AgregarMembresia = ({ agregarMembresia }) => {
           <Autocomplete
             fullWidth
             options={clientes}
-            getOptionLabel={(option) => option.nombre} // Muestra el nombre del cliente
+            getOptionLabel={(option) => option.nombre} 
             onChange={(event, newValue) =>
               handleChange({
                 target: {
@@ -152,9 +154,10 @@ const AgregarMembresia = ({ agregarMembresia }) => {
               display: "flex",
               justifyContent: "space-between",
               gap: "5px",
+              marginTop:'1.2rem'
             }}
           >
-            <TextField
+            <Input
               fullWidth
               name="fecha_inicio"
               value={registroMembresia.fecha_inicio}
@@ -163,9 +166,11 @@ const AgregarMembresia = ({ agregarMembresia }) => {
               type="date"
               required
               size="small"
-              disabled={true}
+              readOnly
+              sx={{backgroundColor:'#04671e',  padding:'0.5rem', borderRadius:'0.5rem',  '& input': {textAlign: 'center', color:'white', letterSpacing:'2px'}}}
             />
-            <TextField
+            <Input
+            readOnly
               fullWidth
               name="fecha_fin"
               value={registroMembresia.fecha_fin}
@@ -173,19 +178,21 @@ const AgregarMembresia = ({ agregarMembresia }) => {
               margin="normal"
               type="date"
               required
-              disabled={true}
               size="small"
+              sx={{backgroundColor:'#6e1a22',  padding:'0.5rem', borderRadius:'0.5rem',  '& input': {textAlign: 'center', color:'white', letterSpacing:'2px'}}}
             />
           </div>
 
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            sx={{ mt: 2 }}
-          >
-            Asignar
-          </Button>
+          <div className="text-end">
+            <Button
+              type="submit"
+              variant="contained"
+              color="secondary"
+              sx={{ mt: 2 }}
+            >
+              Asignar
+            </Button>
+          </div>
         </form>
       </Box>
     </Container>
