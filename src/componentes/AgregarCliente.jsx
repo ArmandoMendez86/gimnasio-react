@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { TextField, Button, Box, Typography, Container } from "@mui/material";
 import Resizer from "react-image-file-resizer";
-import { verificarCorreo } from "../Utileria";
+import { IP, verificarCorreo } from "../Utileria";
 import { toJpeg } from "html-to-image";
 import { QRCodeCanvas } from "qrcode.react";
 
@@ -10,20 +10,13 @@ const AgregarCliente = () => {
     nombre: "",
     telefono: "",
     email: "",
-    imagen: null,
   });
 
   const [config, setConfig] = useState(null);
 
- 
-  const fetchData = async () => {
-    const datos = await verificarConfig();
-    setConfig(datos);
-  };
-
   const verificarConfig = async () => {
     const response = await fetch(
-      "http://192.168.0.7/gimnasio/backend/controladores/ConfiguracionController.php?action=listar"
+      `http://${IP}/gimnasio/backend/controladores/ConfiguracionController.php?action=listar`
     );
     const respuesta = await response.json();
     const datos = respuesta[respuesta.length - 1];
@@ -32,8 +25,8 @@ const AgregarCliente = () => {
 
   const [imagenVistaPrevia, setImagenVistaPrevia] = useState(null);
   const [imagenArchivo, setImagenArchivo] = useState(null);
-  const componentRef = useRef(null); // Referencia a la credencial
-  const [credencialData, setCredencialData] = useState(null); // Nuevo estado para los datos de la credencial
+  const componentRef = useRef(null);
+  const [credencialData, setCredencialData] = useState(null);
 
   const handleChange = (e) => {
     setCliente({
@@ -84,7 +77,7 @@ const AgregarCliente = () => {
       formData.append("imagen", imagenArchivo);
 
       const response = await fetch(
-        "http://192.168.0.7/gimnasio/backend/controladores/ClienteController.php?action=guardar",
+        `http://${IP}/gimnasio/backend/controladores/ClienteController.php?action=guardar`,
         {
           method: "POST",
           body: formData,
@@ -102,7 +95,6 @@ const AgregarCliente = () => {
     if (componentRef.current && credencialData) {
       try {
         const dataUrl = await toJpeg(componentRef.current, { quality: 0.95 });
-
         const link = document.createElement("a");
         link.href = dataUrl;
         link.download = `credencial-${credencialData.nombre}.jpg`;
@@ -133,24 +125,24 @@ const AgregarCliente = () => {
     }
 
     const respuesta = await registrarCliente(cliente);
-
+    console.log(respuesta);
     if (respuesta) {
-      alert("Cliente registrado");
       setCredencialData({ ...cliente });
-      setCliente({
+       setCliente({
         nombre: "",
         telefono: "",
         email: "",
       });
       setImagenVistaPrevia(null);
-
-      console.log("Intentando descargar la credencial...");
-      descargarCredencial();
+      setImagenArchivo(null)
     }
   };
 
   useEffect(() => {
-    fetchData();
+    const fetchData = async () => {
+      const datos = await verificarConfig();
+      setConfig(datos);
+    };
     if (credencialData && componentRef.current) {
       console.log("useEffect: Intentando descargar credencial");
       descargarCredencial();
@@ -159,6 +151,7 @@ const AgregarCliente = () => {
         "useEffect: credencialData o componentRef aún no están listos"
       );
     }
+    fetchData();
   }, [credencialData, componentRef]);
 
   return (

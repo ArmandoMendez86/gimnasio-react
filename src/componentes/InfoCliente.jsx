@@ -6,7 +6,6 @@ import Send from "@mui/icons-material/Telegram";
 import emailjs from "emailjs-com";
 
 const InfoCliente = ({ cliente, config }) => {
- 
   const componentRef = useRef(null);
   const [zoom, setZoom] = useState(1);
   const [offsetX, setOffsetX] = useState(0);

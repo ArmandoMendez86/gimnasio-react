@@ -1,10 +1,11 @@
 import Configuracion from "../componentes/Configuracion";
 import TablaMembresias from "../componentes/TablaMembresias";
+import TablaStock from "../componentes/TablaStock";
 
 function VistaConfiguracion() {
   return (
-    <div>
-      <div className="alert alert-info  mt-4 text-center" role="alert">
+    <div className="p-3">
+      <div className="alert alert-info text-center" role="alert">
         <p className="fs-5">Configuración</p>
       </div>
 
@@ -37,8 +38,22 @@ function VistaConfiguracion() {
             Membresías
           </button>
         </li>
+        <li className="nav-item" role="presentation">
+          <button
+            className="nav-link"
+            id="productos-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#productos-tab-pane"
+            type="button"
+            role="tab"
+            aria-controls="productos-tab-pane"
+            aria-selected="false"
+          >
+            Stock Productos
+          </button>
+        </li>
       </ul>
-      <div className="tab-content" id="myTabContent">
+      <div className="tab-content p-3" id="myTabContent">
         <div
           className="tab-pane fade show active"
           id="home-tab-pane"
@@ -56,6 +71,15 @@ function VistaConfiguracion() {
           tabIndex="0"
         >
           <TablaMembresias />
+        </div>
+        <div
+          className="tab-pane fade"
+          id="productos-tab-pane"
+          role="tabpanel"
+          aria-labelledby="profile-tab"
+          tabIndex="0"
+        >
+          <TablaStock />
         </div>
       </div>
     </div>

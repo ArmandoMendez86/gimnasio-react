@@ -1,21 +1,22 @@
-import { useRef, useState } from "react";
+import React, { useState } from "react";
 import { TextField, Button, Box, Typography, Container } from "@mui/material";
 import Resizer from "react-image-file-resizer";
-import Upload from "@mui/icons-material/Upload";
 import { IP } from "../Utileria";
 
-const Configuracion = () => {
-  const [config, setConfig] = useState({
-    razon: "",
+const AgregarProducto = () => {
+  const [producto, setProducto] = useState({
+    nombre: "",
+    descripcion: "",
+    cantidad: 0,
+    precio: 0,
   });
+
   const [imagenVistaPrevia, setImagenVistaPrevia] = useState(null);
   const [imagenArchivo, setImagenArchivo] = useState(null);
 
-  const archivoInputRef = useRef(null);
-
   const handleChange = (e) => {
-    setConfig({
-      ...config,
+    setProducto({
+      ...producto,
       [e.target.name]: e.target.value,
     });
   };
@@ -53,95 +54,115 @@ const Configuracion = () => {
     return new File([u8arr], filename, { type: mime });
   };
 
-  async function registrarConfig(configuracion) {
+  async function registrarProducto(producto) {
     try {
       const formData = new FormData();
-      formData.append("razon", configuracion.razon);
+      formData.append("nombre", producto.nombre);
+      formData.append("descripcion", producto.descripcion);
+      formData.append("cantidad", producto.cantidad);
+      formData.append("precio", producto.precio);
       formData.append("imagen", imagenArchivo);
 
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/ConfiguracionController.php?action=guardar`,
+        `http://${IP}/gimnasio/backend/controladores/StockController.php?action=guardar`,
         {
           method: "POST",
           body: formData,
         }
       );
       const data = await response.json();
-      window.location.reload();
+      console.log(data);
+      return data.success;
     } catch (error) {
-      console.error("Error al guardar configuracion:", error);
+      console.error("Error al guardar producto:", error);
+      return false;
     }
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!config.razon) {
-      alert("Nombre de gimnasio requerido!");
+    if (!producto.nombre || !producto.descripcion) {
+      alert("Todos los campos son obligatorios");
       return;
     }
 
-    const respuesta = registrarConfig(config);
+    const respuesta = await registrarProducto(producto);
 
     if (respuesta) {
-      alert("Configuración registrada");
-      setConfig({
-        razon: "",
+      alert("Producto registrado");
+
+      setProducto({
+        nombre: "",
+        descripcion: "",
+        cantidad: 0,
+        precio: 0,
       });
       setImagenVistaPrevia(null);
-      setImagenArchivo(null);
-      archivoInputRef.current.value = "";
     }
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container className="d-flex justify-content-center align-items-center gap-2 flex-wrap">
       <Box
-        sx={{ mt: 2, p: 3, boxShadow: 3, borderRadius: 2, bgcolor: "white" }}
+        sx={{
+          mt: 2,
+          p: 3,
+          boxShadow: 3,
+          borderRadius: 2,
+          bgcolor: "white",
+          width: "400px",
+        }}
       >
         <Typography variant="h5" sx={{ mb: 2, textAlign: "center" }}>
-          Datos del Negocio
+          Registrar Datos
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
             fullWidth
-            label="Razón social"
-            name="razon"
-            value={config.razon}
+            label="Producto"
+            name="nombre"
+            value={producto.nombre}
             onChange={handleChange}
             margin="normal"
             required
           />
-
-          <div>
-            <label
-              htmlFor="archivoInput"
-              style={{
-                display: "inline-block",
-                padding: "10px 20px",
-                backgroundColor: "#f0f0f0",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                cursor: "pointer",
-              }}
-            >
-              <Upload /> Subir Logo
-              <input
-                type="file"
-                accept="image/*"
-                onChange={manejarCambioArchivo}
-                ref={archivoInputRef}
-                id="archivoInput"
-                style={{ display: "none" }} // Oculta el input real
-              />
-            </label>
-          </div>
-          <div className="text-center mt-4">
+          <TextField
+            fullWidth
+            label="Descripción"
+            name="descripcion"
+            value={producto.descripcion}
+            onChange={handleChange}
+            margin="normal"
+            required
+          />
+          <TextField
+            fullWidth
+            label="Cantidad"
+            name="cantidad"
+            value={producto.cantidad}
+            onChange={handleChange}
+            margin="normal"
+            type="number"
+            required
+          />
+          <TextField
+            fullWidth
+            label="Precio"
+            name="precio"
+            value={producto.precio}
+            onChange={handleChange}
+            margin="normal"
+            type="number"
+            required
+          />
+          <input type="file" accept="image/*" onChange={manejarCambioArchivo} />
+          <div className="text-center mt-3">
             {imagenVistaPrevia && (
               <img
                 src={imagenVistaPrevia}
                 alt="Vista previa de la imagen"
-                style={{ maxWidth: "200px" }}
+                style={{ maxWidth: "100px" }}
               />
             )}
           </div>
@@ -149,7 +170,7 @@ const Configuracion = () => {
             <Button
               type="submit"
               variant="contained"
-              color="primary"
+              color="secondary"
               sx={{ mt: 2 }}
             >
               Guardar
@@ -161,4 +182,4 @@ const Configuracion = () => {
   );
 };
 
-export default Configuracion;
+export default AgregarProducto;

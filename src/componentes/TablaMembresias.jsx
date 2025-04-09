@@ -13,6 +13,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Add";
+import { IP } from "../Utileria";
 
 const TablaMembresias = () => {
   const [membresias, setMembresias] = useState([]);
@@ -28,7 +29,7 @@ const TablaMembresias = () => {
   const fetchMembresias = async () => {
     try {
       const response = await fetch(
-        "http://192.168.0.7/gimnasio/backend/controladores/MembresiaController.php?action=listar"
+        `http://${IP}/gimnasio/backend/controladores/MembresiaController.php?action=listar`
       );
       const data = await response.json();
       setMembresias(data);
@@ -55,7 +56,7 @@ const TablaMembresias = () => {
     if (confirmar) {
       try {
         const response = await fetch(
-          "http://192.168.0.7/gimnasio/backend/controladores/MembresiaController.php?action=eliminar",
+          `http://${IP}/gimnasio/backend/controladores/MembresiaController.php?action=eliminar`,
           {
             method: "POST",
             body: JSON.stringify(id),
@@ -89,7 +90,7 @@ const TablaMembresias = () => {
 
       try {
         const response = await fetch(
-          "http://192.168.0.7/gimnasio/backend/controladores/MembresiaController.php?action=guardar",
+          `http://${IP}/gimnasio/backend/controladores/MembresiaController.php?action=guardar`,
           {
             method: "POST",
             body: JSON.stringify(tipoMembresia),
@@ -113,7 +114,7 @@ const TablaMembresias = () => {
       }
       try {
         const response = await fetch(
-          "http://192.168.0.7/gimnasio/backend/controladores/MembresiaController.php?action=editar",
+          `http://${IP}/gimnasio/backend/controladores/MembresiaController.php?action=editar`,
           {
             method: "POST",
             body: JSON.stringify(tipoMembresia),
@@ -134,41 +135,15 @@ const TablaMembresias = () => {
     {
       accessorKey: "id",
       header: "ID",
-      muiTableHeadCellProps: {
-        align: "center", // Centrar el encabezado
-      },
-      muiTableBodyCellProps: {
-        sx: {
-          textAlign: "center",
-          textTransform: "upperCase",
-        },
-      },
     },
     {
       accessorKey: "tipo",
       header: "Tipo",
-      muiTableHeadCellProps: {
-        align: "center", // Centrar el encabezado
-      },
-      muiTableBodyCellProps: {
-        sx: {
-          textAlign: "center",
-          textTransform: "upperCase",
-        },
-      },
     },
     {
       accessorKey: "precio",
       header: "Precio",
-      muiTableHeadCellProps: {
-        align: "center", // Centrar el encabezado
-      },
-      muiTableBodyCellProps: {
-        sx: {
-          textAlign: "center",
-          textTransform: "upperCase",
-        },
-      },
+
       Cell: ({ cell }) =>
         new Intl.NumberFormat("es-MX", {
           style: "currency",
@@ -178,23 +153,10 @@ const TablaMembresias = () => {
     {
       accessorKey: "duracion_dias",
       header: "Duración/Días",
-      muiTableHeadCellProps: {
-        align: "center", // Centrar el encabezado
-      },
-      muiTableBodyCellProps: {
-        sx: {
-          textAlign: "center",
-          textTransform: "upperCase",
-        },
-      },
     },
 
     {
       header: "Acciones",
-      muiTableHeadCellProps: {
-        align: "center", // Centrar el encabezado
-      },
-
       Cell: ({ row }) => (
         <Box sx={{ display: "flex", gap: "8px", justifyContent: "center" }}>
           <Button
@@ -245,10 +207,19 @@ const TablaMembresias = () => {
         state={{ globalFilter: filtro }}
         onGlobalFilterChange={setFiltro}
         localization={MRT_Localization_ES}
+        muiTableProps={{
+          size: "small",
+        }}
+        muiTableBodyCellProps={{
+          sx: {
+            padding: "0.3rem",
+            textAlign: "center",
+          },
+        }}
         muiTableHeadCellProps={{
+          align: "center",
           sx: {
             textTransform: "uppercase",
-            fontWeight: "bold",
           },
         }}
       />

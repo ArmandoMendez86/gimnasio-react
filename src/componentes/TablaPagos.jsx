@@ -17,6 +17,7 @@ import AgregarCliente from "./AgregarCliente";
 import AgregarMembresia from "./AgregarMembresia";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
+import { IP } from "../Utileria";
 
 const TablaPagos = () => {
   const [pagos, setPagos] = useState([]);
@@ -31,7 +32,7 @@ const TablaPagos = () => {
   const fetchMembresiasClientes = async () => {
     try {
       const response = await fetch(
-        "http://192.168.0.7/gimnasio/backend/controladores/MembresiaClienteController.php?action=listar"
+        `http://${IP}/gimnasio/backend/controladores/MembresiaClienteController.php?action=listar`
       );
       const data = await response.json();
 
@@ -44,7 +45,7 @@ const TablaPagos = () => {
   async function agregarCliente(cliente) {
     try {
       const response = await fetch(
-        "http://192.168.0.7/gimnasio/backend/controladores/ClienteController.php?action=guardar",
+        `http://${IP}/gimnasio/backend/controladores/ClienteController.php?action=guardar`,
         {
           method: "POST",
           body: JSON.stringify(cliente),
@@ -63,7 +64,7 @@ const TablaPagos = () => {
   async function agregarMembresia(registroMembresia) {
     try {
       const response = await fetch(
-        "http://192.168.0.7/gimnasio/backend/controladores/MembresiaClienteController.php?action=guardar",
+        `http://${IP}/gimnasio/backend/controladores/MembresiaClienteController.php?action=guardar`,
         {
           method: "POST",
           body: JSON.stringify(registroMembresia),
@@ -84,66 +85,32 @@ const TablaPagos = () => {
     {
       accessorKey: "nombre",
       header: "Nombre",
-      muiTableHeadCellProps: {
-        align: "center",
-      },
-      muiTableBodyCellProps: { sx: { textTransform: "upperCase" } },
     },
     {
       accessorKey: "telefono",
       header: "Teléfono",
-      muiTableHeadCellProps: {
-        align: "center",
-      },
-      muiTableBodyCellProps: {
-        sx: {
-          textAlign: "center",
-          textTransform: "upperCase",
-        },
-      },
     },
     {
       accessorKey: "email",
       header: "Correo",
-      muiTableHeadCellProps: {
-        align: "center",
-      },
-      muiTableBodyCellProps: {
-        sx: { textTransform: "upperCase", textAlign: "center" },
-      },
     },
     {
       accessorKey: "tipo",
       header: "Membresía",
-      muiTableHeadCellProps: {
-        align: "center",
-      },
-      muiTableBodyCellProps: {
-        sx: {
-          textAlign: "center",
-          textTransform: "upperCase",
-        },
-      },
     },
     {
       accessorKey: "fecha_inicio",
       header: "Inicia",
-      muiTableHeadCellProps: {
-        align: "center",
-      },
+
       Cell: ({ cell }) =>
         dayjs(cell.getValue()).locale("es").format("DD/MMM/YYYY"),
-      muiTableBodyCellProps: { sx: { textAlign: "center" } },
     },
     {
       accessorKey: "fecha_fin",
       header: "Termina",
-      muiTableHeadCellProps: {
-        align: "center",
-      },
+
       Cell: ({ cell }) =>
         dayjs(cell.getValue()).locale("es").format("DD/MMM/YYYY"),
-      muiTableBodyCellProps: { sx: { textAlign: "center" } },
     },
   ];
 
@@ -181,10 +148,19 @@ const TablaPagos = () => {
         state={{ globalFilter: filtro }}
         onGlobalFilterChange={setFiltro}
         localization={MRT_Localization_ES}
+        muiTableProps={{
+          size: "small",
+        }}
+        muiTableBodyCellProps={{
+          sx: {
+            padding: "0.3rem",
+            textAlign: "center",
+          },
+        }}
         muiTableHeadCellProps={{
+          align:"center",
           sx: {
             textTransform: "uppercase",
-            fontWeight: "bold",
           },
         }}
       />
@@ -203,7 +179,12 @@ const TablaPagos = () => {
         </DialogContent>
       </Dialog>
 
-      <Dialog fullWidth maxWidth="sm" open={dialogMembresia} onClose={() => setDialogMembresia(false)}>
+      <Dialog
+        fullWidth
+        maxWidth="sm"
+        open={dialogMembresia}
+        onClose={() => setDialogMembresia(false)}
+      >
         <DialogContent>
           <div className="text-end">
             <Button

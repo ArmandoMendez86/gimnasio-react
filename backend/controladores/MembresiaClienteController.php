@@ -1,7 +1,7 @@
 <?php
 $allowedOrigins = [
     'http://localhost:5173',
-    'http://192.168.0.7:5173',
+    'http://192.168.10.17:5173',
     
 
 ];

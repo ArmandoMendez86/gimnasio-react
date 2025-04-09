@@ -1,18 +1,18 @@
-body{
-    background-color: #0f0d1a;
+body {
+  background-color: #0f0d1a;
 }
 
-.alert.alert-info{
-    background-color: #F8F9FA;
-    width: fit-content;
-    margin: auto;
-    padding-bottom:0.1rem ;
-    
+.alert.alert-info {
+  background-color: #f8f9fa;
+  width: fit-content;
+  margin: auto;
+  padding-bottom: 0.1rem;
 }
 
-li button.nav-link.active{
-    background-color: #343a40 !important;
-    color: white !important;
+li button.nav-link.active {
+  background-color: #343a40 !important;
+  color: white !important;
 }
-
-
+li button.nav-link {
+  color: white !important;
+}

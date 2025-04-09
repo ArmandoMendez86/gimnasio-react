@@ -39,7 +39,7 @@ function Navegacion({ config }) {
             />
           </a>
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link
                 className="nav-link active text-white"
                 aria-current="page"
@@ -47,13 +47,17 @@ function Navegacion({ config }) {
               >
                 Inicio
               </Link>
-            </li>
+            </li> */}
             <li className="nav-item">
               <Link className="nav-link text-white" to="/clientes">
                 Clientes
               </Link>
             </li>
-
+            <li className="nav-item">
+              <Link className="nav-link text-white" to="/venta">
+                Venta
+              </Link>
+            </li>
             <li className="nav-item">
               <Link className="nav-link text-white" to="/pagos">
                 Clientes/Membresías

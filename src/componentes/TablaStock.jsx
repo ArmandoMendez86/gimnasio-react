@@ -15,66 +15,71 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Add";
-import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import ClearIcon from "@mui/icons-material/Clear";
 import { QRCodeCanvas } from "qrcode.react";
-import { IP, verificarCorreo } from "../Utileria";
+import { IP } from "../Utileria";
 import Resizer from "react-image-file-resizer";
-import InfoCliente from "./InfoCliente";
 
-const baseUrl = `http://${IP}:5173/`;
-const path = "registro";
+const baseUrl = `http://${IP}:5173`;
+const path = "/registro-producto";
 
-const TablaClientes = ({ config }) => {
-  const [clientes, setClientes] = useState([]);
+const TablaStock = () => {
+  const [stock, setStock] = useState([]);
   const [filtro, setFiltro] = useState("");
-  const [clienteEditando, setClienteEditando] = useState(null);
+  const [producto, setProducto] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [openQr, setOpenQr] = useState(false);
   const [openDetalles, setOpenDetalles] = useState(false);
-  const [nuevoCliente, setNuevoCliente] = useState(false);
+  const [nuevoProducto, setNuevoProducto] = useState(false);
   const [imagenVistaPrevia, setImagenVistaPrevia] = useState(null);
   const [imagenArchivo, setImagenArchivo] = useState(null);
 
   useEffect(() => {
-    fetchClientes();
+    fetchStock();
   }, []);
 
-  const fetchClientes = async () => {
+  const fetchStock = async () => {
     try {
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/ClienteController.php?action=listar`
+        `http://${IP}/gimnasio/backend/controladores/StockController.php?action=listar`
       );
       const data = await response.json();
-      setClientes(data);
+      setStock(data);
     } catch (error) {
-      console.error("Error al obtener clientes:", error);
+      console.error("Error al obtener el stock:", error);
     }
   };
 
-  const handleAbrirDialog = (cliente = null) => {
-    if (cliente) {
-      setClienteEditando({ ...cliente, imagen: cliente.imagen || null });
-      setImagenVistaPrevia(cliente.imagen || null);
-      setNuevoCliente(false);
+  const handleAbrirDialog = (producto = null) => {
+    if (producto) {
+      setProducto({ ...producto, img: producto.img || null });
+      setImagenVistaPrevia(
+        producto.img ? `./backend/img_productos/${producto.img}` : ""
+      );
+      setNuevoProducto(false);
       setImagenArchivo(null); // Reset archivo
     } else {
-      setClienteEditando({ nombre: "", telefono: "", email: "", imagen: null });
+      setProducto({
+        nombre_producto: "",
+        descripcion: "",
+        cantidad: null,
+        precio_unitario: null,
+      });
       setImagenVistaPrevia(null);
-      setNuevoCliente(true);
-      setImagenArchivo(null); // Reset archivo
+      setNuevoProducto(true);
+      setImagenArchivo(null);
     }
     setOpenDialog(true);
   };
 
   const handleEliminar = async (id) => {
     const confirmar = window.confirm(
-      "¿Estás seguro de que deseas eliminar este cliente?"
+      "¿Estás seguro de que deseas eliminar este producto?"
     );
     if (confirmar) {
       try {
         const response = await fetch(
-          `http://${IP}/gimnasio/backend/controladores/ClienteController.php?action=eliminar`,
+          `http://${IP}/gimnasio/backend/controladores/StockController.php?action=eliminar`,
           {
             method: "POST",
             body: JSON.stringify(id),
@@ -82,12 +87,12 @@ const TablaClientes = ({ config }) => {
         );
         const data = await response.json();
         if (data.error) {
-          alert(data.error); // Mostrar mensaje de error al usuario
+          alert(data.error);
         } else {
-          fetchClientes(); // Recargar la lista de clientes si la eliminación fue exitosa
+          fetchStock();
         }
       } catch (error) {
-        console.error("Error al guardar cliente:", error);
+        console.error("Error al guardar producto:", error);
       }
     }
   };
@@ -105,7 +110,6 @@ const TablaClientes = ({ config }) => {
         0,
         (uri) => {
           setImagenVistaPrevia(uri);
-          // Convertir la URI base64 a un objeto File
           const archivoRedimensionado = base64ToFile(uri, archivo.name);
           setImagenArchivo(archivoRedimensionado);
         },
@@ -126,96 +130,81 @@ const TablaClientes = ({ config }) => {
     return new File([u8arr], filename, { type: mime });
   };
 
-  const handleGuardarCliente = async () => {
-    if (nuevoCliente) {
-      if (clienteEditando === null) return;
+  const handleGuardarProducto = async () => {
+    if (nuevoProducto) {
+      if (producto === null) return;
 
       if (
-        !clienteEditando.nombre ||
-        clienteEditando.nombre.trim() === "" ||
-        !clienteEditando.telefono ||
-        clienteEditando.telefono.trim() === ""
+        !producto.nombre_producto ||
+        producto.nombre_producto.trim() === "" ||
+        !producto.descripcion ||
+        producto.descripcion.trim() === "" ||
+        !producto.cantidad ||
+        !producto.precio_unitario
       ) {
-        alert("El nombre y teléfono no pueden estar vacíos.");
-        return;
-      }
-
-      const checarCorreo = await verificarCorreo(clienteEditando.email);
-
-      if (checarCorreo.length > 0) {
-        alert("El correo ya existe!");
+        alert("El nombre y descripción no pueden estar vacíos.");
         return;
       }
 
       try {
         const formData = new FormData();
-        formData.append("nombre", clienteEditando.nombre);
-        formData.append("telefono", clienteEditando.telefono);
-        formData.append("email", clienteEditando.email);
-        formData.append("imagen", imagenArchivo); // Enviar el archivo de imagen
+        formData.append("nombre", producto.nombre_producto);
+        formData.append("descripcion", producto.descripcion);
+        formData.append("cantidad", producto.cantidad);
+        formData.append("precio", producto.precio_unitario);
+        formData.append("imagen", imagenArchivo);
 
         const response = await fetch(
-          `http://${IP}/gimnasio/backend/controladores/ClienteController.php?action=guardar`,
+          `http://${IP}/gimnasio/backend/controladores/StockController.php?action=guardar`,
           {
             method: "POST",
             body: formData,
           }
         );
         const data = await response.json();
-        if (data.success) {
-          alert("Cliente registrado!");
-          fetchClientes();
-        }
+        fetchStock();
       } catch (error) {
-        console.error("Error al guardar cliente:", error);
+        console.error("Error al guardar producto:", error);
       }
     } else {
+     
       if (
-        !clienteEditando.nombre ||
-        clienteEditando.nombre.trim() === "" ||
-        !clienteEditando.telefono ||
-        clienteEditando.telefono.trim() === ""
+        !producto.nombre_producto ||
+        producto.nombre_producto.trim() === "" ||
+        !producto.descripcion ||
+        producto.descripcion.trim() === "" ||
+        !producto.cantidad ||
+        !producto.precio_unitario
       ) {
-        alert("El nombre y teléfono no pueden estar vacíos.");
+        alert("El nombre y descripcion no pueden estar vacíos.");
         return;
       }
       try {
         const formData = new FormData();
-        formData.append("id", clienteEditando.id);
-        formData.append("nombre", clienteEditando.nombre);
-        formData.append("telefono", clienteEditando.telefono);
-        formData.append("email", clienteEditando.email);
+        formData.append("id", producto.id);
+        formData.append("nombre", producto.nombre_producto);
+        formData.append("descripcion", producto.descripcion);
+        formData.append("cantidad", producto.cantidad);
+        formData.append("precio", producto.precio_unitario);
         if (imagenArchivo) {
           formData.append("imagen", imagenArchivo);
         }
 
         const response = await fetch(
-          `http://${IP}/gimnasio/backend/controladores/ClienteController.php?action=editar`,
+          `http://${IP}/gimnasio/backend/controladores/StockController.php?action=editar`,
           {
             method: "POST",
             body: formData,
           }
         );
         const data = await response.json();
-        console.log(data);
-        fetchClientes();
+        fetchStock();
       } catch (error) {
-        console.error("Error al editar cliente:", error);
+        console.error("Error al editar producto:", error);
       }
     }
 
     setOpenDialog(false);
-  };
-
-  const detalleCliente = (cliente) => {
-    if (config?.razon) {
-      setClienteEditando(cliente);
-      setOpenDetalles(true);
-    } else {
-      alert(
-        "Ingresa el nombre de tu negocio en Configuracion, para poder generar la credencial!"
-      );
-    }
   };
 
   const columns = [
@@ -224,20 +213,35 @@ const TablaClientes = ({ config }) => {
       header: "ID",
     },
     {
-      accessorKey: "nombre",
-      header: "Nombre",
+      accessorKey: "nombre_producto",
+      header: "Producto",
     },
     {
-      accessorKey: "telefono",
-      header: "Teléfono",
+      accessorKey: "descripcion",
+      header: "Descripción",
     },
     {
-      accessorKey: "email",
-      header: "Correo",
+      accessorKey: "cantidad",
+      header: "Cantidad",
+    },
+    {
+      accessorKey: "precio_unitario",
+      header: "Precio",
     },
     {
       accessorKey: "img",
       header: "Imagen",
+      Cell: ({ cell }) => (
+        <img
+          src={
+            cell.getValue() !== null
+              ? `./backend/img_productos/${cell.getValue()}`
+              : "./backend/img_productos/no-product.png"
+          }
+          alt={`Imagen de ${cell.row.original.name}`}
+          style={{ width: "100px", height: "100px", objectFit: "contain" }}
+        />
+      ),
     },
 
     {
@@ -247,7 +251,7 @@ const TablaClientes = ({ config }) => {
         <Box sx={{ display: "flex", gap: "8px", justifyContent: "center" }}>
           <Button
             data-bs-toggle="tooltip"
-            title="Editar Cliente"
+            title="Editar Producto"
             variant="contained"
             color="white"
             size="small"
@@ -257,23 +261,13 @@ const TablaClientes = ({ config }) => {
           </Button>
           <Button
             data-bs-toggle="tooltip"
-            title="Eliminar Cliente"
+            title="Eliminar Producto"
             variant="contained"
             color="white"
             size="small"
             onClick={() => handleEliminar(row.original.id)}
           >
             <DeleteIcon />
-          </Button>
-          <Button
-            data-bs-toggle="tooltip"
-            title="Ver/Crear Credencial"
-            variant="contained"
-            color="white"
-            size="small"
-            onClick={() => detalleCliente(row.original)}
-          >
-            <VisibilityOutlinedIcon />
           </Button>
         </Box>
       ),
@@ -305,10 +299,10 @@ const TablaClientes = ({ config }) => {
       {/* 📋 Tabla con paginación y filtros */}
       <MaterialReactTable
         columns={columns}
-        data={clientes}
+        data={stock}
         initialState={{
           pagination: { pageSize: 5 },
-          columnVisibility: { id: false, img: false },
+          columnVisibility: { id: false },
         }}
         enablePagination={true}
         enableColumnFilters={true}
@@ -333,52 +327,69 @@ const TablaClientes = ({ config }) => {
         }}
       />
 
-      {/* 📝 Modal de Edición o Creación de clientes */}
+      {/* 📝 Modal de Edición o Creación de productos */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>
-          {nuevoCliente ? "Registrar Cliente" : "Editar Cliente"}
+          {nuevoProducto ? "Registrar Producto" : "Editar Producto"}
         </DialogTitle>
         <DialogContent>
           <TextField
-            label="Nombre"
+            label="Producto"
             fullWidth
             margin="dense"
-            value={clienteEditando?.nombre || ""}
+            value={producto?.nombre_producto || ""}
             onChange={(e) =>
-              setClienteEditando({ ...clienteEditando, nombre: e.target.value })
+              setProducto({ ...producto, nombre_producto: e.target.value })
             }
           />
           <TextField
-            label="Teléfono"
+            label="Descripción"
             fullWidth
-            type="tel"
             margin="dense"
-            value={clienteEditando?.telefono || ""}
+            value={producto?.descripcion || ""}
             onChange={(e) =>
-              setClienteEditando({
-                ...clienteEditando,
-                telefono: e.target.value,
+              setProducto({
+                ...producto,
+                descripcion: e.target.value,
               })
             }
           />
           <TextField
-            label="Correo"
+            label="Cantidad"
             fullWidth
-            type="email"
+            type="number"
             margin="dense"
-            value={clienteEditando?.email || ""}
+            value={producto?.cantidad || ""}
             onChange={(e) =>
-              setClienteEditando({ ...clienteEditando, email: e.target.value })
+              setProducto({ ...producto, cantidad: e.target.value })
+            }
+          />
+          <TextField
+            label="Precio"
+            fullWidth
+            type="number"
+            margin="dense"
+            value={producto?.precio_unitario || ""}
+            onChange={(e) =>
+              setProducto({ ...producto, precio_unitario: e.target.value })
             }
           />
           <Input type="file" accept="image/*" onChange={manejarCambioArchivo} />
           {imagenVistaPrevia && (
-            <Box sx={{ display: "flex", alignItems: "center", marginTop: 1 }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: 1,
+              }}
+            >
               <img
                 src={imagenVistaPrevia}
                 alt="Vista previa de la imagen"
-                style={{ maxWidth: "400px", marginRight: 1 }}
+                style={{ maxWidth: "200px", marginRight: 1 }}
               />
+
               <IconButton onClick={() => setImagenVistaPrevia(null)}>
                 <ClearIcon />
               </IconButton>
@@ -395,10 +406,10 @@ const TablaClientes = ({ config }) => {
           </Button>
           <Button
             variant="contained"
-            onClick={handleGuardarCliente}
+            onClick={handleGuardarProducto}
             color="secondary"
           >
-            {nuevoCliente ? "Crear" : "Guardar"}
+            {nuevoProducto ? "Crear" : "Guardar"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -409,14 +420,8 @@ const TablaClientes = ({ config }) => {
           <QRCodeCanvas value={`${baseUrl}${path}`} size={200} />
         </DialogContent>
       </Dialog>
-      {/* Ventana para detalles de cliente */}
-      <Dialog open={openDetalles} onClose={() => setOpenDetalles(false)}>
-        <DialogContent>
-          <InfoCliente cliente={clienteEditando} config={config} />
-        </DialogContent>
-      </Dialog>
     </Box>
   );
 };
 
-export default TablaClientes;
+export default TablaStock;

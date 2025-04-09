@@ -15,27 +15,20 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Access-Control-Allow-Credentials: true");
 
-require_once '../modelos/Cliente.php';
+require_once '../modelos/Stock.php';
 
-class ClienteController
+class StockController
 {
     private $modelo;
 
     public function __construct()
     {
-        $this->modelo = new Cliente();
+        $this->modelo = new Stock();
     }
 
     public function listar()
     {
         echo json_encode($this->modelo->obtenerTodos());
-    }
-
-    public function verificarCorreo()
-    {
-        $data = json_decode(file_get_contents("php://input"), true);
-        $correo = $data['email'];
-        echo json_encode($this->modelo->verificarCorreo($correo));
     }
 
     public function guardar()
@@ -45,7 +38,7 @@ class ClienteController
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
                 $extension = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
                 $nombreArchivo = uniqid('img_') . '.' . $extension;
-                $rutaArchivo = '../img_clientes/' . $nombreArchivo;
+                $rutaArchivo = '../img_productos/' . $nombreArchivo;
 
                 if (move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaArchivo)) {
 
@@ -58,17 +51,19 @@ class ClienteController
                 $nombreImagen = null;
             }
             $nombre = $_POST['nombre'];
-            $telefono = $_POST['telefono'];
-            $email = $_POST['email'];
+            $descripcion = $_POST['descripcion'];
+            $cantidad = $_POST['cantidad'];
+            $precio = $_POST['precio'];
 
-            if (empty($nombre) || empty($telefono)) {
+            if (empty($nombre) || empty($descripcion)) {
                 echo json_encode(['error' => 'Datos incompletos']);
                 return;
             }
             $resultado = $this->modelo->agregar(
                 $nombre,
-                $telefono,
-                $email,
+                $descripcion,
+                $cantidad,
+                $precio,
                 $nombreImagen
             );
 
@@ -78,14 +73,16 @@ class ClienteController
         }
     }
 
-    public function editar() {
+
+    public function editar()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-           
+
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
                 $extension = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
                 $nombreArchivo = uniqid('img_') . '.' . $extension;
-                $rutaArchivo = '../img_clientes/' . $nombreArchivo;
-    
+                $rutaArchivo = '../img_productos/' . $nombreArchivo;
+
                 if (move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaArchivo)) {
                     $nombreImagen = $nombreArchivo;
                 } else {
@@ -93,30 +90,31 @@ class ClienteController
                     return;
                 }
             } else {
-                $nombreImagen = null; 
+                $nombreImagen = null;
             }
-    
-            // Manejar los datos de texto
+
             $id = $_POST['id'];
             $nombre = $_POST['nombre'];
-            $telefono = $_POST['telefono'];
-            $email = $_POST['email'];
-    
-            // Validar los datos
-            if (empty($id) || empty($nombre) || empty($telefono)) {
+            $descripcion = $_POST['descripcion'];
+            $cantidad = $_POST['cantidad'];
+            $precio = $_POST['precio'];
+
+
+            if (empty($id) || empty($nombre) || empty($descripcion)) {
                 echo json_encode(['error' => 'Datos incompletos']);
                 return;
             }
-    
-            // Llamar al modelo para editar los datos y la imagen
+
+
             $resultado = $this->modelo->editar(
                 $id,
                 $nombre,
-                $telefono,
-                $email,
-                $nombreImagen // Pasar el nombre de la imagen al modelo
+                $descripcion,
+                $cantidad,
+                $precio,
+                $nombreImagen
             );
-    
+
             echo json_encode(['success' => $resultado]);
         } else {
             echo json_encode(['error' => 'Método no permitido']);
@@ -136,8 +134,9 @@ class ClienteController
     }
 }
 
+// Manejo de peticiones
 $action = $_GET['action'] ?? '';
-$controller = new ClienteController();
+$controller = new StockController();
 
 if ($action == "listar") {
     $controller->listar();
@@ -147,6 +146,4 @@ if ($action == "listar") {
     $controller->editar();
 } elseif ($action == "eliminar") {
     $controller->eliminar();
-} elseif ($action == "checarcorreo") {
-    $controller->verificarCorreo();
 }
