@@ -126,15 +126,31 @@ const InfoCliente = ({ cliente, config }) => {
         ref={componentRef}
         className="card p-4 text-center border rounded"
         style={{
+          position: "relative", // Necesario para el pseudo-elemento
           width: "300px",
           height: "450px",
-          backgroundColor: "#d2dada",
           textTransform: "uppercase",
+          overflow: "hidden", // Para que el pseudo-elemento no se desborde
         }}
       >
-        <div className="card-body">
-          <h3 className="card-title text-danger">{config.razon}</h3>
-
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundImage: "url(./backend/img_productos/fondo_2.gif)",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            opacity: 0.5, // Ajusta el valor de opacidad (0 a 1)
+          }}
+        ></div>
+        <div className="card-body" style={{ position: "relative", zIndex: 0 }}>
+          {" "}
+          {/* Asegura que el contenido esté encima */}
+          <h3 className="card-title" style={{color:"#dc3545"}}>{config.razon}</h3>
           <div
             className="rounded-circle overflow-hidden border border-3 border-white my-3 mx-auto"
             style={{ width: "150px", height: "150px" }}
@@ -149,18 +165,17 @@ const InfoCliente = ({ cliente, config }) => {
               }
               alt="cliente Profile"
               className="w-100 h-100 object-fit-cover"
+              style={{ opacity: "0.8" }}
             />
           </div>
-
-          <h5 className="card-title">{cliente.nombre}</h5>
-          <p className="card-text text-muted">{cliente.telefono}</p>
-
+          <h5 className="card-title text-black">{cliente.nombre}</h5>
+          <p className="card-text text-black">{cliente.telefono}</p>
           <div className="mt-4 d-flex justify-content-center">
             <QRCodeCanvas
               value={cliente.telefono}
               size={70}
               bgColor="#ffffff"
-              fgColor="#001256"
+              fgColor="#a22615"
               level="Q"
             />
           </div>

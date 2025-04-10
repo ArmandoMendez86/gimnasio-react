@@ -355,6 +355,7 @@ const TablaStock = () => {
             }
           />
           <TextField
+          disabled
             label="Cantidad"
             fullWidth
             type="number"

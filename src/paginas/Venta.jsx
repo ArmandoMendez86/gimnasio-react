@@ -1,9 +1,7 @@
-import PuntoDeVenta from "../componentes/PuntoDeVenta"
+import PuntoDeVenta from "../componentes/PuntoDeVenta";
 
-function Venta(){
-    return(
-       <PuntoDeVenta />
-    )
+function Venta() {
+  return <PuntoDeVenta />;
 }
 
-export default Venta
+export default Venta;

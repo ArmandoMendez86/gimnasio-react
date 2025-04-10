@@ -13,7 +13,7 @@ import {
   Input,
 } from "@mui/material";
 import dayjs from "dayjs";
-
+import { IP } from "../Utileria";
 
 const AgregarMembresia = ({ agregarMembresia }) => {
   const [registroMembresia, setRegistroMembresia] = useState({
@@ -33,7 +33,7 @@ const AgregarMembresia = ({ agregarMembresia }) => {
   const fetchClientes = async () => {
     try {
       const response = await fetch(
-        "http://192.168.0.7/gimnasio/backend/controladores/ClienteController.php?action=listar"
+        `http://${IP}/gimnasio/backend/controladores/ClienteController.php?action=listar`
       );
       const data = await response.json();
       setClientes(data);
@@ -45,7 +45,7 @@ const AgregarMembresia = ({ agregarMembresia }) => {
   const fetchMembresias = async () => {
     try {
       const response = await fetch(
-        "http://192.168.0.7/gimnasio/backend/controladores/MembresiaController.php?action=listar"
+        `http://${IP}/gimnasio/backend/controladores/MembresiaController.php?action=listar`
       );
       const data = await response.json();
       setTiposMembresia(data);
@@ -95,9 +95,7 @@ const AgregarMembresia = ({ agregarMembresia }) => {
 
   return (
     <Container>
-      <Box
-        sx={{ p: 3, boxShadow: 3, borderRadius: 2, bgcolor: "white" }}
-      >
+      <Box sx={{ p: 3, boxShadow: 3, borderRadius: 2, bgcolor: "white" }}>
         <Typography variant="h5" sx={{ mb: 2 }}>
           Asignar Membresía
         </Typography>
@@ -106,7 +104,7 @@ const AgregarMembresia = ({ agregarMembresia }) => {
           <Autocomplete
             fullWidth
             options={clientes}
-            getOptionLabel={(option) => option.nombre} 
+            getOptionLabel={(option) => option.nombre}
             onChange={(event, newValue) =>
               handleChange({
                 target: {
@@ -154,7 +152,7 @@ const AgregarMembresia = ({ agregarMembresia }) => {
               display: "flex",
               justifyContent: "space-between",
               gap: "5px",
-              marginTop:'1.2rem'
+              marginTop: "1.2rem",
             }}
           >
             <Input
@@ -167,10 +165,19 @@ const AgregarMembresia = ({ agregarMembresia }) => {
               required
               size="small"
               readOnly
-              sx={{backgroundColor:'#04671e',  padding:'0.5rem', borderRadius:'0.5rem',  '& input': {textAlign: 'center', color:'white', letterSpacing:'2px'}}}
+              sx={{
+                backgroundColor: "#04671e",
+                padding: "0.5rem",
+                borderRadius: "0.5rem",
+                "& input": {
+                  textAlign: "center",
+                  color: "white",
+                  letterSpacing: "2px",
+                },
+              }}
             />
             <Input
-            readOnly
+              readOnly
               fullWidth
               name="fecha_fin"
               value={registroMembresia.fecha_fin}
@@ -179,7 +186,16 @@ const AgregarMembresia = ({ agregarMembresia }) => {
               type="date"
               required
               size="small"
-              sx={{backgroundColor:'#6e1a22',  padding:'0.5rem', borderRadius:'0.5rem',  '& input': {textAlign: 'center', color:'white', letterSpacing:'2px'}}}
+              sx={{
+                backgroundColor: "#6e1a22",
+                padding: "0.5rem",
+                borderRadius: "0.5rem",
+                "& input": {
+                  textAlign: "center",
+                  color: "white",
+                  letterSpacing: "2px",
+                },
+              }}
             />
           </div>
 

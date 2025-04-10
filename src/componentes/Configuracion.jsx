@@ -95,7 +95,7 @@ const Configuracion = () => {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container>
       <Box
         sx={{ mt: 2, p: 3, boxShadow: 3, borderRadius: 2, bgcolor: "white" }}
       >

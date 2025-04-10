@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { IP } from "../Utileria";
+import dayjs from "dayjs";
 
 function PuntoDeVenta() {
   const [productos, setProductos] = useState([]); // Datos de la base de datos
@@ -95,7 +96,7 @@ function PuntoDeVenta() {
     [productos]
   );
 
-  const realizarVenta = () => {
+  const realizarVenta = async () => {
     const productos = carrito.map((producto) => {
       return {
         id_producto: producto.id,
@@ -103,23 +104,38 @@ function PuntoDeVenta() {
         descuento: producto.descuento,
       };
     });
-    let datos = {
-      productos: productos,
-      fecha_venta: new Date(),
-      total: nuevoTotal,
-    };
-    console.log(datos);
+
+    try {
+      const response = await fetch(
+        `http://${IP}/gimnasio/backend/controladores/VentaController.php?action=guardar`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            productos: productos,
+            fecha_venta: dayjs().format("YYYY-MM-DD"),
+            total: nuevoTotal,
+          }),
+        }
+      );
+      const data = await response.json();
+      if (data.success) {
+        alert("Venta realizada!");
+        setCarrito([]);
+      }
+    } catch (error) {
+      console.error("Error al guardar venta:", error);
+    }
   };
 
   return (
-    <div className="container-fluid mt-4">
+    <div className="container mt-4">
       <div className="row">
         {/* Columna izquierda (8 columnas) - Lista de productos */}
         <div className="col-md-8">
-          <div className="text-center mb-2">
+          <div className="mb-2">
             <input
               type="text"
-              className="form-control w-50"
+              className="form-control"
               placeholder="Buscar productos..."
               value={searchTerm}
               onChange={handleSearch}
@@ -136,7 +152,7 @@ function PuntoDeVenta() {
                         : "./backend/img_productos/no-product.png"
                     }
                     alt={producto.nombre_producto}
-                    className="card-img-top"
+                    className="card-img-top p-2"
                     style={{ maxHeight: "150px", objectFit: "contain" }}
                   />
 
@@ -172,7 +188,11 @@ function PuntoDeVenta() {
               <li className="list-group-item d-flex flex-column" key={item.id}>
                 <div className="d-flex align-items-center mb-2">
                   <img
-                    src={`./backend/img_productos/${item.img}`}
+                    src={
+                      item.img !== null
+                        ? `./backend/img_productos/${item.img}`
+                        : "./backend/img_productos/no-product.png"
+                    }
                     alt={item.nombre_producto}
                     className="rounded me-2"
                     style={{
@@ -227,7 +247,7 @@ function PuntoDeVenta() {
                       type="number"
                       className="form-control form-control-sm"
                       id={`descuento-${item.id}`}
-                      value={(item.descuento * 100).toFixed(0)} // Mostrar como porcentaje
+                      value={(item.descuento * 100).toFixed(0)}
                       onChange={(e) =>
                         actualizarDescuento(
                           item.id,
@@ -257,7 +277,9 @@ function PuntoDeVenta() {
               </li>
             )}
             {carrito.length === 0 && (
-              <li className="list-group-item">El carrito está vacío</li>
+              <li className="list-group-item text-center">
+                El carrito está vacío
+              </li>
             )}
           </ul>
           {/* Botón "Realizar Venta" */}

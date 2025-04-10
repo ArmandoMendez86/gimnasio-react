@@ -2,9 +2,9 @@ import TablaPagos from "../componentes/TablaPagos";
 
 function Pagos() {
   return (
-    <div className="p-3">
-      <div className="alert alert-info text-center" role="alert">
-        <p className="fs-5">Membresías Asignadas</p>
+    <div className="container">
+      <div className="text-center">
+        <span className="badge text-bg-dark fs-6">Membresías Asignadas</span>
       </div>
       <TablaPagos />
     </div>

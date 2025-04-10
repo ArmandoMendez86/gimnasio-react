@@ -40,17 +40,19 @@ function App() {
   return (
     <Router>
       <div>
-        <Navegacion config={config} />
+        <Navegacion config={config}  />
 
-        <Routes>
-          <Route path="/" element={<Inicio />} />
-          <Route path="/clientes" element={<Clientes config={config} />} />
-          <Route path="/venta" element={<Venta />} />
-          <Route path="/pagos" element={<Pagos />} />
-          <Route path="/registro" element={<RegistroCliente />} />
-          <Route path="/registro-producto" element={<RegistroProducto />} />
-          <Route path="/configuracion" element={<VistaConfiguracion />} />
-        </Routes>
+        <div style={{marginTop:'150px'}}>
+          <Routes>
+            <Route path="/" element={<Inicio />} />
+            <Route path="/clientes" element={<Clientes config={config} />} />
+            <Route path="/venta" element={<Venta />} />
+            <Route path="/pagos" element={<Pagos />} />
+            <Route path="/registro" element={<RegistroCliente />} />
+            <Route path="/registro-producto" element={<RegistroProducto />} />
+            <Route path="/configuracion" element={<VistaConfiguracion />} />
+          </Routes>
+        </div>
       </div>
     </Router>
   );

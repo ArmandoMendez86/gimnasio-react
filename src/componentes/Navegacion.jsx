@@ -4,10 +4,10 @@ import LogoutIcon from "@mui/icons-material/Logout";
 function Navegacion({ config }) {
   return (
     <nav
-      className="navbar navbar-expand-lg"
+      className="navbar navbar-expand-lg fixed-top"
       style={{ backgroundColor: "#343A40" }}
     >
-      <div className="container-fluid">
+      <div className="container">
         <button
           className="navbar-toggler"
           type="button"
@@ -60,7 +60,7 @@ function Navegacion({ config }) {
             </li>
             <li className="nav-item">
               <Link className="nav-link text-white" to="/pagos">
-                Clientes/Membresías
+                Membresías
               </Link>
             </li>
             <li className="nav-item">
@@ -70,12 +70,6 @@ function Navegacion({ config }) {
             </li>
           </ul>
           <form className="d-flex" role="search">
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
             <button
               data-bs-toggle="tooltip"
               title="Salir del sistema"
