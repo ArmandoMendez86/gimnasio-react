@@ -1,8 +1,9 @@
 <?php
+require_once '../config/Ip.php';
 $allowedOrigins = [
     'http://localhost:5173',
-    'http://192.168.10.17:5173',
-    
+    'http://' . IP . ':5173',
+
 
 ];
 
@@ -34,6 +35,13 @@ class MembresiaClienteController
         echo json_encode($this->modelo->obtenerTodos());
     }
 
+    public function ventaServicios()
+    {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $fecha = $data['fecha'];
+        echo json_encode($this->modelo->ventaServicios($fecha));
+    }
+
     public function guardar()
     {
         $data = json_decode(file_get_contents("php://input"), true);
@@ -42,19 +50,20 @@ class MembresiaClienteController
             $data['id_membresia'],
             $data['fecha_inicio'],
             $data['fecha_fin'],
+            $data['descuento'],
         );
         echo json_encode(["success" => $resultado]);
     }
 
-    public function editar()
+    public function actualizarPago()
     {
         $data = json_decode(file_get_contents("php://input"), true);
 
-        $resultado = $this->modelo->editar(
+        $status = $data['status'] ? 1 : 0;
+
+        $resultado = $this->modelo->actualizarPago(
             $data['id'],
-            $data['tipo'],
-            $data['precio'],
-            $data['duracion_dias'],
+            $status
         );
         echo json_encode(["success" => $resultado]);
     }
@@ -73,10 +82,12 @@ $controller = new MembresiaClienteController();
 
 if ($action == "listar") {
     $controller->listar();
+} elseif ($action == "ventaservicios") {
+    $controller->ventaServicios();
 } elseif ($action == "guardar") {
     $controller->guardar();
-} elseif ($action == "editar") {
-    $controller->editar();
+} elseif ($action == "actualizarpago") {
+    $controller->actualizarPago();
 } elseif ($action == "eliminar") {
     $controller->eliminar();
 }

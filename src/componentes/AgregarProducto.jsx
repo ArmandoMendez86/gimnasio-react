@@ -72,7 +72,7 @@ const AgregarProducto = () => {
       );
       const data = await response.json();
       console.log(data);
-      return data.success;
+      return data
     } catch (error) {
       console.error("Error al guardar producto:", error);
       return false;
@@ -89,7 +89,7 @@ const AgregarProducto = () => {
 
     const respuesta = await registrarProducto(producto);
 
-    if (respuesta) {
+    if (respuesta.success) {
       alert("Producto registrado");
 
       setProducto({
@@ -170,7 +170,7 @@ const AgregarProducto = () => {
             <Button
               type="submit"
               variant="contained"
-              color="secondary"
+              color="warning"
               sx={{ mt: 2 }}
             >
               Guardar

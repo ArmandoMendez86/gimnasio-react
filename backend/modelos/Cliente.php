@@ -12,7 +12,7 @@ class Cliente
 
     public function obtenerTodos()
     {
-        $query = "SELECT id, nombre, telefono, email, img FROM clientes";
+        $query = "SELECT id, nombre, telefono, email, img, fecha_registro FROM clientes ORDER BY fecha_registro DESC";
         return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 

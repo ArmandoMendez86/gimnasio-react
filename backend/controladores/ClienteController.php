@@ -1,7 +1,9 @@
 <?php
+require_once '../config/Ip.php';
+
 $allowedOrigins = [
     'http://localhost:5173',
-    'http://192.168.10.17:5173',
+    'http://' . IP . ':5173',
 
 
 ];
@@ -78,14 +80,15 @@ class ClienteController
         }
     }
 
-    public function editar() {
+    public function editar()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-           
+
             if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
                 $extension = pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION);
                 $nombreArchivo = uniqid('img_') . '.' . $extension;
                 $rutaArchivo = '../img_clientes/' . $nombreArchivo;
-    
+
                 if (move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaArchivo)) {
                     $nombreImagen = $nombreArchivo;
                 } else {
@@ -93,21 +96,21 @@ class ClienteController
                     return;
                 }
             } else {
-                $nombreImagen = null; 
+                $nombreImagen = null;
             }
-    
+
             // Manejar los datos de texto
             $id = $_POST['id'];
             $nombre = $_POST['nombre'];
             $telefono = $_POST['telefono'];
             $email = $_POST['email'];
-    
+
             // Validar los datos
             if (empty($id) || empty($nombre) || empty($telefono)) {
                 echo json_encode(['error' => 'Datos incompletos']);
                 return;
             }
-    
+
             // Llamar al modelo para editar los datos y la imagen
             $resultado = $this->modelo->editar(
                 $id,
@@ -116,7 +119,7 @@ class ClienteController
                 $email,
                 $nombreImagen // Pasar el nombre de la imagen al modelo
             );
-    
+
             echo json_encode(['success' => $resultado]);
         } else {
             echo json_encode(['error' => 'Método no permitido']);

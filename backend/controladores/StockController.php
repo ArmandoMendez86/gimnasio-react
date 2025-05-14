@@ -1,7 +1,8 @@
 <?php
+require_once '../config/Ip.php';
 $allowedOrigins = [
     'http://localhost:5173',
-    'http://192.168.10.17:5173',
+    'http://' . IP . ':5173',
 
 
 ];
@@ -29,6 +30,11 @@ class StockController
     public function listar()
     {
         echo json_encode($this->modelo->obtenerTodos());
+    }
+
+    public function listarMovimientoStock()
+    {
+        echo json_encode($this->modelo->movimientoStock());
     }
 
     public function guardar()
@@ -140,6 +146,8 @@ $controller = new StockController();
 
 if ($action == "listar") {
     $controller->listar();
+} elseif ($action == "movimientostock") {
+    $controller->listarMovimientoStock();
 } elseif ($action == "guardar") {
     $controller->guardar();
 } elseif ($action == "editar") {

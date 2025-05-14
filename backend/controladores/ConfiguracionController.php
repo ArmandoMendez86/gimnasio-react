@@ -1,7 +1,8 @@
 <?php
+require_once '../config/Ip.php';
 $allowedOrigins = [
     'http://localhost:5173',
-    'http://192.168.10.17:5173',
+    'http://' . IP . ':5173',
 
 
 ];

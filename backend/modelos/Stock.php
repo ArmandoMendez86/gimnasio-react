@@ -17,6 +17,13 @@ class Stock
         return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function movimientoStock()
+    {
+        $query = "SELECT p.nombre_producto, me.tipo_movimiento, me.cantidad, me.existia, me.existe, me.fecha_movimiento, p.img FROM movimiento_stock AS me
+        INNER JOIN stock AS p ON me.id_producto = p.id ORDER BY me.fecha_movimiento DESC";
+        return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function agregar($nombre, $descripcion, $cantidad, $precio, $imagen)
     {
         $query = "INSERT INTO stock (nombre_producto, descripcion, cantidad, precio_unitario, img) VALUES (?, ?, ?, ?, ?)";

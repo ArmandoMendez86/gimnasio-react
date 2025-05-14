@@ -19,11 +19,12 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { QRCodeCanvas } from "qrcode.react";
 import { IP } from "../Utileria";
 import Resizer from "react-image-file-resizer";
+import AgregarProducto from "./AgregarProducto";
 
 const baseUrl = `http://${IP}:5173`;
 const path = "/registro-producto";
 
-const TablaStock = () => {
+const TablaStock = ({ recargar }) => {
   const [stock, setStock] = useState([]);
   const [filtro, setFiltro] = useState("");
   const [producto, setProducto] = useState(null);
@@ -36,7 +37,7 @@ const TablaStock = () => {
 
   useEffect(() => {
     fetchStock();
-  }, []);
+  }, [recargar]);
 
   const fetchStock = async () => {
     try {
@@ -167,7 +168,6 @@ const TablaStock = () => {
         console.error("Error al guardar producto:", error);
       }
     } else {
-     
       if (
         !producto.nombre_producto ||
         producto.nombre_producto.trim() === "" ||
@@ -223,10 +223,12 @@ const TablaStock = () => {
     {
       accessorKey: "cantidad",
       header: "Cantidad",
+      size: 1,
     },
     {
       accessorKey: "precio_unitario",
       header: "Precio",
+      size: 1,
     },
     {
       accessorKey: "img",
@@ -238,8 +240,8 @@ const TablaStock = () => {
               ? `./backend/img_productos/${cell.getValue()}`
               : "./backend/img_productos/no-product.png"
           }
-          alt={`Imagen de ${cell.row.original.name}`}
-          style={{ width: "100px", height: "100px", objectFit: "contain" }}
+          alt={`Imagen de ${cell.row.original.nombre_producto}`}
+          style={{ width: "70px", height: "70px", objectFit: "cover" }}
         />
       ),
     },
@@ -297,35 +299,59 @@ const TablaStock = () => {
       </Button>
 
       {/* 📋 Tabla con paginación y filtros */}
-      <MaterialReactTable
-        columns={columns}
-        data={stock}
-        initialState={{
-          pagination: { pageSize: 5 },
-          columnVisibility: { id: false },
+      <div
+        style={{
+          backgroundColor: "#343a40",
+          padding: "0.7rem",
+          borderRadius: "10px",
         }}
-        enablePagination={true}
-        enableColumnFilters={true}
-        enableGlobalFilter={true}
-        state={{ globalFilter: filtro }}
-        onGlobalFilterChange={setFiltro}
-        localization={MRT_Localization_ES}
-        muiTableProps={{
-          size: "small",
-        }}
-        muiTableBodyCellProps={{
-          sx: {
-            padding: "0.3rem",
-            textAlign: "center",
-          },
-        }}
-        muiTableHeadCellProps={{
-          align: "center",
-          sx: {
-            textTransform: "uppercase",
-          },
-        }}
-      />
+      >
+        <MaterialReactTable
+          columns={columns}
+          data={stock}
+          initialState={{
+            pagination: { pageSize: 5 },
+            columnVisibility: { id: false },
+          }}
+          enablePagination={true}
+          enableColumnFilters={true}
+          localization={MRT_Localization_ES}
+          muiTableBodyCellProps={({ column, cell }) => {
+            return {
+              sx: {
+                padding: "4px 8px",
+                fontSize: "14px",
+                ...(column.id === "cantidad" && {
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  color:'#07874c'
+                }),
+                ...(column.id === "precio_unitario" && {
+                  backgroundColor: "#2c2c2c",
+                  color: "#ff6600",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                }),
+                ...(column.id === "img" && {
+                  textAlign: "center",
+                }),
+                backgroundColor: "#d8dfe6",
+              },
+            };
+          }}
+          muiTableHeadCellProps={{
+            align: "center",
+            sx: {
+              padding: "4px 8px",
+              textTransform: "uppercase",
+              fontSize: "13px",
+              fontWeight: "bold",
+              color:'white',  
+              backgroundColor: "#343a40",
+            },
+          }}
+        />
+      </div>
 
       {/* 📝 Modal de Edición o Creación de productos */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
@@ -355,7 +381,7 @@ const TablaStock = () => {
             }
           />
           <TextField
-          disabled
+            disabled
             label="Cantidad"
             fullWidth
             type="number"
@@ -401,14 +427,14 @@ const TablaStock = () => {
           <Button
             variant="contained"
             onClick={() => setOpenDialog(false)}
-            color="secondary"
+            color="warning"
           >
             Cancelar
           </Button>
           <Button
             variant="contained"
             onClick={handleGuardarProducto}
-            color="secondary"
+            color="warning"
           >
             {nuevoProducto ? "Crear" : "Guardar"}
           </Button>

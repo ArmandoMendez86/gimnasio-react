@@ -159,14 +159,14 @@ const AgregarCliente = () => {
       <Box
         sx={{
           mt: 2,
-          p: 3,
+          p: 2,
           boxShadow: 3,
           borderRadius: 2,
           bgcolor: "white",
           width: "400px",
         }}
       >
-        <Typography variant="h5" sx={{ mb: 2, textAlign: "center" }}>
+        <Typography variant="h5" sx={{ textAlign: "center" }}>
           Registrar Datos
         </Typography>
         <form onSubmit={handleSubmit}>
@@ -212,7 +212,7 @@ const AgregarCliente = () => {
             <Button
               type="submit"
               variant="contained"
-              color="secondary"
+              color="warning"
               sx={{ mt: 2 }}
             >
               Guardar

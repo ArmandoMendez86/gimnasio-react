@@ -7,11 +7,10 @@ import {
   Container,
   Autocomplete,
 } from "@mui/material";
-import Resizer from "react-image-file-resizer";
 import { IP } from "../Utileria";
 import dayjs from "dayjs";
 
-const Suministro = () => {
+const Suministro = ({ setRecargar }) => {
   const [producto, setProducto] = useState({
     id: null,
     cantidad: 0,
@@ -48,7 +47,6 @@ const Suministro = () => {
 
     setProducto(newState);
 
-    // Utiliza newState directamente para la lógica que depende del producto actualizado
     const datosProducto = productos.find((p) => p.id === newState.id);
     if (datosProducto?.img == null || datosProducto === undefined) {
       setImagenVistaPrevia(null);
@@ -64,6 +62,7 @@ const Suministro = () => {
       alert("Seleccione un producto porfavor!");
       return;
     }
+
     const respuesta = await suministrarProducto(producto);
     if (respuesta) {
       alert("Suministro registrado!");
@@ -72,6 +71,7 @@ const Suministro = () => {
         cantidad: 0,
         descuento: 0,
       });
+      setRecargar(true);
     }
   };
 
@@ -83,7 +83,7 @@ const Suministro = () => {
           method: "POST",
           body: JSON.stringify({
             productos: [producto],
-            fecha_venta: dayjs().format("YYYY-MM-DD"),
+            fecha_venta: dayjs().format("YYYY-MM-DD H:mm:ss"),
             total: 0,
           }),
         }
@@ -108,7 +108,7 @@ const Suministro = () => {
           width: "400px",
         }}
       >
-        <Typography variant="h5" sx={{ mb: 2, textAlign: "center" }}>
+        <Typography variant="h5" sx={{ textAlign: "center" }}>
           Registrar Suministro
         </Typography>
         <form onSubmit={handleSubmit}>
@@ -129,41 +129,43 @@ const Suministro = () => {
                 {...params}
                 label="Productos"
                 margin="normal"
-                size="small"
+                
               />
             )}
           />
-          <TextField
-            fullWidth
-            label="Cantidad"
-            name="cantidad"
-            value={producto.cantidad}
-            onChange={handleChange}
-            margin="normal"
-            type="number"
-          />
-          <TextField
-            fullWidth
-            label="Descuento"
-            name="descuento"
-            value={producto.descuento}
-            onChange={handleChange}
-            margin="normal"
-            type="number"
-          />
+          <div className="d-flex gap-2">
+            <TextField
+              fullWidth
+              label="Cantidad"
+              name="cantidad"
+              value={producto.cantidad}
+              onChange={handleChange}
+              margin="normal"
+              type="number"
+            />
+            <TextField
+              fullWidth
+              label="Descuento"
+              name="descuento"
+              value={producto.descuento}
+              onChange={handleChange}
+              margin="normal"
+              type="number"
+            />
+          </div>
 
           <div className="text-center mt-3">
             {imagenVistaPrevia ? (
               <img
                 src={`./backend/img_productos/${imagenVistaPrevia}`}
                 alt="Vista previa de la imagen"
-                style={{ maxWidth: "100px" }}
+                style={{ maxWidth: "90px" }}
               />
             ) : (
               <img
                 src="./backend/img_productos/no-product.png"
                 alt="Imagen no disponible"
-                style={{ maxWidth: "100px" }}
+                style={{ maxWidth: "90px" }}
               />
             )}
           </div>
@@ -171,7 +173,7 @@ const Suministro = () => {
             <Button
               type="submit"
               variant="contained"
-              color="secondary"
+              color="warning"
               sx={{ mt: 2 }}
             >
               Guardar

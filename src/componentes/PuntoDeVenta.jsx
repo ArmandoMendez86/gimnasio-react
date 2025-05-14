@@ -89,7 +89,6 @@ function PuntoDeVenta() {
         );
         setProductosFiltrados(resultados);
       } else {
-        // Si el campo de búsqueda está vacío, restaurar los productos originales
         setProductosFiltrados(productos);
       }
     },
@@ -112,7 +111,7 @@ function PuntoDeVenta() {
           method: "POST",
           body: JSON.stringify({
             productos: productos,
-            fecha_venta: dayjs().format("YYYY-MM-DD"),
+            fecha_venta: dayjs().format("YYYY-MM-DD H:mm:ss"),
             total: nuevoTotal,
           }),
         }
@@ -141,7 +140,7 @@ function PuntoDeVenta() {
               onChange={handleSearch}
             />
           </div>
-          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
             {productosFiltrados.map((producto) => (
               <div className="col" key={producto.id}>
                 <div className="card shadow-sm h-100">
@@ -153,16 +152,26 @@ function PuntoDeVenta() {
                     }
                     alt={producto.nombre_producto}
                     className="card-img-top p-2"
-                    style={{ maxHeight: "150px", objectFit: "contain" }}
+                    style={{
+                      maxHeight: "120px",
+                      maxWidth: "150px",
+                      objectFit: "contain",
+                      borderRadius: "1rem",
+                      margin: "auto",
+                    }}
                   />
 
                   <div className="card-body d-flex flex-column">
-                    <h5 className="card-title">{producto.nombre_producto}</h5>
-                    <p className="card-text">${producto.precio_unitario}</p>
+                    <h5 className="card-title fs-6 text-center">
+                      {producto.nombre_producto}
+                    </h5>
+                    <p className="card-text text-muted text-center">
+                      ${producto.precio_unitario}
+                    </p>
                     <div className="mt-auto d-flex justify-content-end">
                       <button
                         onClick={() => agregarAlCarrito(producto)}
-                        className="btn btn-primary btn-sm"
+                        className="btn btn-dark btn-sm"
                       >
                         + Agregar
                       </button>

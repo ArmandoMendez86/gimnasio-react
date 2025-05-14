@@ -1,7 +1,8 @@
 <?php
+require_once '../config/Ip.php';
 $allowedOrigins = [
     'http://localhost:5173',
-    'http://192.168.10.17:5173',
+    'http://' . IP . ':5173',
 
 
 ];
@@ -29,6 +30,13 @@ class VentaController
     public function listar()
     {
         echo json_encode($this->modelo->obtenerTodos());
+    }
+
+    public function ventaProductos()
+    {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $fecha = $data['fecha'];
+        echo json_encode($this->modelo->ventaProductos($fecha));
     }
 
     public function guardar()
@@ -85,6 +93,8 @@ $controller = new VentaController();
 
 if ($action == "listar") {
     $controller->listar();
+} elseif ($action == "ventaproductos") {
+    $controller->ventaProductos();
 } elseif ($action == "guardar") {
     $controller->guardar();
 } elseif ($action == "suministrar") {

@@ -1,10 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 function Navegacion({ config }) {
+  const location = useLocation();
+
+  const getLinkClass = (path) => {
+    return `nav-link text-white ${location.pathname === path ? "active" : ""}`;
+  };
+
   return (
     <nav
-      className="navbar navbar-expand-lg fixed-top"
+      className="navbar navbar-expand-lg p-2"
       style={{ backgroundColor: "#343A40" }}
     >
       <div className="container">
@@ -20,11 +26,11 @@ function Navegacion({ config }) {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
-          <a className="navbar-brand" href="#">
+          <Link className="navbar-brand" to="/">
             <img
               style={{
-                width: "80px",
-                height: "80px",
+                width: "100px",
+                height: "100px",
                 objectFit: "cover",
                 borderRadius: "50%",
               }}
@@ -37,35 +43,29 @@ function Navegacion({ config }) {
               }
               alt=""
             />
-          </a>
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            {/* <li className="nav-item">
-              <Link
-                className="nav-link active text-white"
-                aria-current="page"
-                to="/"
-              >
-                Inicio
-              </Link>
-            </li> */}
+          </Link>
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0 gap-3">
             <li className="nav-item">
-              <Link className="nav-link text-white" to="/clientes">
+              <Link className={getLinkClass("/clientes")} to="/clientes">
                 Clientes
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-white" to="/venta">
+              <Link className={getLinkClass("/venta")} to="/venta">
                 Venta
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-white" to="/pagos">
+              <Link className={getLinkClass("/pagos")} to="/pagos">
                 Membresías
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-white" to="/configuracion">
-                Configuración
+              <Link
+                className={getLinkClass("/configuracion")}
+                to="/configuracion"
+              >
+                Administración
               </Link>
             </li>
           </ul>

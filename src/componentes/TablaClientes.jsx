@@ -22,6 +22,9 @@ import { IP, verificarCorreo } from "../Utileria";
 import Resizer from "react-image-file-resizer";
 import InfoCliente from "./InfoCliente";
 
+import dayjs from "dayjs";
+import "dayjs/locale/es";
+
 const baseUrl = `http://${IP}:5173/`;
 const path = "registro";
 
@@ -236,6 +239,12 @@ const TablaClientes = ({ config }) => {
       header: "Correo",
     },
     {
+      accessorKey: "fecha_registro",
+      header: "Registro",
+      Cell: ({ cell }) =>
+        dayjs(cell.getValue()).locale("es").format("DD/MMM/YYYY"),
+    },
+    {
       accessorKey: "img",
       header: "Imagen",
     },
@@ -246,7 +255,6 @@ const TablaClientes = ({ config }) => {
       Cell: ({ row }) => (
         <Box sx={{ display: "flex", gap: "8px", justifyContent: "center" }}>
           <Button
-            data-bs-toggle="tooltip"
             title="Editar Cliente"
             variant="contained"
             color="white"
@@ -256,7 +264,6 @@ const TablaClientes = ({ config }) => {
             <EditIcon />
           </Button>
           <Button
-            data-bs-toggle="tooltip"
             title="Eliminar Cliente"
             variant="contained"
             color="white"
@@ -266,7 +273,6 @@ const TablaClientes = ({ config }) => {
             <DeleteIcon />
           </Button>
           <Button
-            data-bs-toggle="tooltip"
             title="Ver/Crear Credencial"
             variant="contained"
             color="white"
@@ -281,7 +287,7 @@ const TablaClientes = ({ config }) => {
   ];
 
   return (
-    <Box sx={{ padding: 2, textAlign: "right" }}>
+    <Box sx={{ padding: 2 }}>
       {/* Botón para crear un nuevo cliente */}
       <Button
         variant="contained"
@@ -303,35 +309,49 @@ const TablaClientes = ({ config }) => {
       </Button>
 
       {/* 📋 Tabla con paginación y filtros */}
-      <MaterialReactTable
-        columns={columns}
-        data={clientes}
-        initialState={{
-          pagination: { pageSize: 5 },
-          columnVisibility: { id: false, img: false },
+      <div
+        style={{
+          backgroundColor: "#343a40",
+          padding: "0.7rem",
+          borderRadius: "10px",
         }}
-        enablePagination={true}
-        enableColumnFilters={true}
-        enableGlobalFilter={true}
-        state={{ globalFilter: filtro }}
-        onGlobalFilterChange={setFiltro}
-        localization={MRT_Localization_ES}
-        muiTableProps={{
-          size: "small",
-        }}
-        muiTableBodyCellProps={{
-          sx: {
-            padding: "0.3rem",
-            textAlign: "center",
-          },
-        }}
-        muiTableHeadCellProps={{
-          align: "center",
-          sx: {
-            textTransform: "uppercase",
-          },
-        }}
-      />
+      >
+        <MaterialReactTable
+          columns={columns}
+          data={clientes}
+          initialState={{
+            pagination: { pageSize: 5 },
+            columnVisibility: { id: false, img: false },
+          }}
+          enablePagination={true}
+          enableColumnFilters={true}
+          localization={MRT_Localization_ES}
+          muiTableBodyCellProps={({ column }) => ({
+            sx: {
+              padding: "4px 8px",
+              fontSize: "14px",
+              ...(column.id === "telefono" && {
+                textAlign: "center",
+              }),
+              ...(column.id === "fecha_registro" && {
+                textAlign: "center",
+              }),
+              backgroundColor: "#d8dfe6",
+            },
+          })}
+          muiTableHeadCellProps={{
+            align: "center",
+            sx: {
+              padding: "4px 8px",
+              textTransform: "uppercase",
+              fontSize: "13px",
+              fontWeight: "bold",
+              color: "white",
+              backgroundColor: "#343a40",
+            },
+          }}
+        />
+      </div>
 
       {/* 📝 Modal de Edición o Creación de clientes */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
@@ -389,14 +409,14 @@ const TablaClientes = ({ config }) => {
           <Button
             variant="contained"
             onClick={() => setOpenDialog(false)}
-            color="secondary"
+            color="warning"
           >
             Cancelar
           </Button>
           <Button
             variant="contained"
             onClick={handleGuardarCliente}
-            color="secondary"
+            color="warning"
           >
             {nuevoCliente ? "Crear" : "Guardar"}
           </Button>

@@ -185,7 +185,7 @@ const TablaMembresias = () => {
       {/* Botón para crear un nuevo cliente */}
       <Button
         variant="contained"
-        color="info"
+        color="warning"
         sx={{ marginBottom: 2 }}
         onClick={() => handleAbrirDialog()}
         startIcon={<SaveIcon />}
@@ -194,35 +194,54 @@ const TablaMembresias = () => {
       </Button>
 
       {/* 📋 Tabla con paginación y filtros */}
-      <MaterialReactTable
-        columns={columns}
-        data={membresias}
-        initialState={{
-          pagination: { pageSize: 5 },
-          columnVisibility: { id: false },
+      <div
+        style={{
+          backgroundColor: "#343a40",
+          padding: "0.7rem",
+          borderRadius: "10px",
         }}
-        enablePagination={true}
-        enableColumnFilters={true}
-        enableGlobalFilter={true}
-        state={{ globalFilter: filtro }}
-        onGlobalFilterChange={setFiltro}
-        localization={MRT_Localization_ES}
-        muiTableProps={{
-          size: "small",
-        }}
-        muiTableBodyCellProps={{
-          sx: {
-            padding: "0.3rem",
-            textAlign: "center",
-          },
-        }}
-        muiTableHeadCellProps={{
-          align: "center",
-          sx: {
-            textTransform: "uppercase",
-          },
-        }}
-      />
+      >
+        <MaterialReactTable
+          columns={columns}
+          data={membresias}
+          initialState={{
+            pagination: { pageSize: 5 },
+            columnVisibility: { id: false },
+          }}
+          enablePagination={true}
+          enableColumnFilters={true}
+          localization={MRT_Localization_ES}
+          muiTableBodyCellProps={({ column }) => ({
+            sx: {
+              padding: "4px 8px",
+              fontSize: "14px",
+              ...(column.id === "precio" && {
+                color: "#ff6600",
+                fontWeight: "bold",
+                textAlign: "center",
+              }),
+              ...(column.id === "tipo" && {
+                textAlign: "center",
+              }),
+              ...(column.id === "duracion_dias" && {
+                textAlign: "center",
+              }),
+              backgroundColor: "#d8dfe6",
+            },
+          })}
+          muiTableHeadCellProps={{
+            align: "center",
+            sx: {
+              padding: "4px 8px",
+              textTransform: "uppercase",
+              fontSize: "13px",
+              fontWeight: "bold",
+              color:'white',
+              backgroundColor: "#343a40",
+            },
+          }}
+        />
+      </div>
 
       {/* 📝 Modal de Edición o Creación */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
@@ -263,8 +282,18 @@ const TablaMembresias = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>Cancelar</Button>
-          <Button onClick={handleGuardarMembresia} color="primary">
+          <Button
+            variant="contained"
+            color="warning"
+            onClick={() => setOpenDialog(false)}
+          >
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleGuardarMembresia}
+            variant="contained"
+            color="warning"
+          >
             {nuevaMembresia ? "Crear" : "Guardar"}
           </Button>
         </DialogActions>

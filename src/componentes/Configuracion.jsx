@@ -149,7 +149,7 @@ const Configuracion = () => {
             <Button
               type="submit"
               variant="contained"
-              color="primary"
+              color="warning"
               sx={{ mt: 2 }}
             >
               Guardar

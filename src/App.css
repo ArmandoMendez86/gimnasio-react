@@ -1,5 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=PT+Sans+Narrow:wght@400;700&display=swap');
+
+
+
+
 body {
   background-color: #0f0d1a;
+  font-family: "PT Sans Narrow", sans-serif;
 }
 
 .alert.alert-info {
@@ -16,3 +22,22 @@ li button.nav-link.active {
 li button.nav-link {
   color: white !important;
 }
+
+.active {
+  border-bottom: 4px solid #fff;
+}
+.navbar-nav .nav-item .nav-link {
+  font-size: 1.2rem;
+   font-family: "Oswald", sans-serif;
+}
+
+
+.MuiButton-containedWarning{
+  background-color: #00695C !important;
+}
+.MuiButton-containedWhite{
+  background-color: #0f0d1a14 !important;
+  color: #0f0d1a !important;
+}
+
+

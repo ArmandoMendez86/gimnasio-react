@@ -14,7 +14,16 @@ const verificarCorreo = async (correo) => {
   }
 };
 
-// ip config
-const IP = "192.168.10.17";
+const formatearCantidad = (amount) => {
+  return new Intl.NumberFormat("es-MX", {
+    style: "currency",
+    currency: "MXN",
+  }).format(amount);
+};
 
-export { verificarCorreo, IP };
+
+
+// ip config
+const IP = "192.168.10.6";
+
+export { verificarCorreo, IP, formatearCantidad };

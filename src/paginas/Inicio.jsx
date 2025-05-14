@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import Configuracion from "../componentes/Configuracion";
+import VentasDiarias from "../componentes/VentasDiarias";
 
 function Inicio() {
- 
-
-  
   return (
-    <>
-     <h1>Vista de inicio</h1>
-    </>
+    <div className="container">
+      <h1 className="text-center">Reporte del día</h1>
+      <VentasDiarias />
+    </div>
   );
 }
 

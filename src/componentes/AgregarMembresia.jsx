@@ -21,6 +21,7 @@ const AgregarMembresia = ({ agregarMembresia }) => {
     id_membresia: "",
     fecha_inicio: "",
     fecha_fin: "",
+    descuento: 0,
   });
   const [clientes, setClientes] = useState([]);
   const [tiposMembresia, setTiposMembresia] = useState([]);
@@ -96,7 +97,7 @@ const AgregarMembresia = ({ agregarMembresia }) => {
   return (
     <Container>
       <Box sx={{ p: 3, boxShadow: 3, borderRadius: 2, bgcolor: "white" }}>
-        <Typography variant="h5" sx={{ mb: 2 }}>
+        <Typography variant="h5" >
           Asignar Membresía
         </Typography>
         <form onSubmit={handleSubmit}>
@@ -125,28 +126,39 @@ const AgregarMembresia = ({ agregarMembresia }) => {
           />
 
           {/* Autocomplete para Tipos de Membresía */}
-          <Autocomplete
-            fullWidth
-            options={tiposMembresia}
-            getOptionLabel={(option) => option.tipo}
-            onChange={(event, newValue) =>
-              handleChange({
-                target: {
-                  name: "id_membresia",
-                  value: newValue ? newValue.id : "",
-                },
-              })
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Tipo Membresía"
-                margin="normal"
-                required
-                size="small"
-              />
-            )}
-          />
+          <div className="d-flex justify-content-between gap-5 align-items-center">
+            <Autocomplete
+              fullWidth
+              options={tiposMembresia}
+              getOptionLabel={(option) => option.tipo}
+              onChange={(event, newValue) =>
+                handleChange({
+                  target: {
+                    name: "id_membresia",
+                    value: newValue ? newValue.id : "",
+                  },
+                })
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Tipo Membresía"
+                  margin="normal"
+                  required
+                  size="small"
+                />
+              )}
+            />
+            <TextField
+              label="Descuento"
+              name="descuento"
+              value={registroMembresia.descuento}
+              onChange={handleChange}
+              margin="normal"
+              type="number"
+              required
+            />
+          </div>
           <div
             style={{
               display: "flex",
@@ -166,7 +178,7 @@ const AgregarMembresia = ({ agregarMembresia }) => {
               size="small"
               readOnly
               sx={{
-                backgroundColor: "#04671e",
+                backgroundColor: "#07060d",
                 padding: "0.5rem",
                 borderRadius: "0.5rem",
                 "& input": {
@@ -187,7 +199,7 @@ const AgregarMembresia = ({ agregarMembresia }) => {
               required
               size="small"
               sx={{
-                backgroundColor: "#6e1a22",
+                backgroundColor: "#1a1d20",
                 padding: "0.5rem",
                 borderRadius: "0.5rem",
                 "& input": {
@@ -203,7 +215,7 @@ const AgregarMembresia = ({ agregarMembresia }) => {
             <Button
               type="submit"
               variant="contained"
-              color="secondary"
+              color="warning"
               sx={{ mt: 2 }}
             >
               Asignar
