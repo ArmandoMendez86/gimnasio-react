@@ -21,12 +21,12 @@ import { IP } from "../Utileria";
 import { useMemo } from "react";
 import { formatearCantidad } from "../Utileria";
 
-const TablaPagos = () => {
+const TablaPagos = ({ usuarioLogueado }) => {
   const [pagos, setPagos] = useState([]);
   const [checked, setChecked] = useState(false);
   const [dialogCliente, setDialogCliente] = useState(false);
   const [dialogMembresia, setDialogMembresia] = useState(false);
-
+  console.log(usuarioLogueado);
   useEffect(() => {
     fetchMembresiasClientes();
   }, [checked]);
@@ -194,18 +194,20 @@ const TablaPagos = () => {
       header: "Acciones",
       Cell: ({ row }) => (
         <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <Button
-            title="Eliminar"
-            size="small"
-            onClick={() => handleEliminar(row.original.id)}
-            sx={{
-              color: "red",
-              fontWeight: "bold",
-              fontSize: "1rem",
-            }}
-          >
-            X
-          </Button>
+          {usuarioLogueado?.perfil === "admin" && (
+            <Button
+              title="Eliminar"
+              size="small"
+              onClick={() => handleEliminar(row.original.id)}
+              sx={{
+                color: "red",
+                fontWeight: "bold",
+                fontSize: "1rem",
+              }}
+            >
+              X
+            </Button>
+          )}
         </Box>
       ),
       size: 1,

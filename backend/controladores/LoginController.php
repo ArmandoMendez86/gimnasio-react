@@ -56,7 +56,7 @@ class LoginController
 
 
             if ($respuesta[0]['perfil'] == 'admin') {
-                echo json_encode(['success' => 'ok', 'redirect' => '/configuracion']);
+                echo json_encode(['success' => 'ok', 'redirect' => '/']);
             } elseif ($respuesta[0]['perfil'] == 'vendedor') {
                 echo json_encode(['success' => 'ok', 'redirect' => '/clientes']);
             }

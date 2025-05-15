@@ -32,7 +32,10 @@ const Layout = ({ config, usuarioLogueado }) => {
           <Route path="/" element={<Inicio />} />
           <Route path="/clientes" element={<Clientes config={config} />} />
           <Route path="/venta" element={<Venta />} />
-          <Route path="/pagos" element={<Pagos />} />
+          <Route
+            path="/pagos"
+            element={<Pagos usuarioLogueado={usuarioLogueado} />}
+          />
           <Route path="/registro" element={<RegistroCliente />} />
           <Route path="/registro-producto" element={<RegistroProducto />} />
           <Route path="/configuracion" element={<VistaConfiguracion />} />
@@ -54,10 +57,8 @@ function App() {
         const datos = await verificarConfig();
         const data = await verificarUsuarioLogueado();
         setConfig(datos);
-        if (data.loggedIn) {
-          setUsuarioLogueado(data);
-          console.log(data);
-        }
+        setUsuarioLogueado(data);
+        //console.log(data)
       } catch (err) {
         console.error("Error al cargar la configuración:", err);
       }

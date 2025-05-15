@@ -7,6 +7,7 @@ import { verificarUsuarioLogueado } from "../Utileria";
 function Navegacion({ config, usuarioLogueado }) {
   const location = useLocation();
 
+
   const getLinkClass = (path) => {
     return `nav-link text-white ${location.pathname === path ? "active" : ""}`;
   };
@@ -63,7 +64,7 @@ function Navegacion({ config, usuarioLogueado }) {
                 Membresías
               </Link>
             </li>
-            {usuarioLogueado.perfil === "admin" && (
+            {usuarioLogueado?.perfil === "admin" && (
               <li className="nav-item">
                 <Link
                   className={getLinkClass("/configuracion")}
