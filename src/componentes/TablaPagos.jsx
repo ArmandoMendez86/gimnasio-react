@@ -34,7 +34,9 @@ const TablaPagos = () => {
   const fetchMembresiasClientes = async () => {
     try {
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/MembresiaClienteController.php?action=listar`
+        `${
+          import.meta.env.VITE_API_URL_LOCAL
+        }/backend/controladores/MembresiaClienteController.php?action=listar`
       );
       const data = await response.json();
 
@@ -47,7 +49,9 @@ const TablaPagos = () => {
   async function agregarMembresia(registroMembresia) {
     try {
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/MembresiaClienteController.php?action=guardar`,
+        `${
+          import.meta.env.VITE_API_URL_LOCAL
+        }/backend/controladores/MembresiaClienteController.php?action=guardar`,
         {
           method: "POST",
           body: JSON.stringify(registroMembresia),
@@ -66,7 +70,9 @@ const TablaPagos = () => {
 
   const actualizarPago = async (datos) => {
     const response = await fetch(
-      `http://${IP}/gimnasio/backend/controladores/MembresiaClienteController.php?action=actualizarpago`,
+      `${
+        import.meta.env.VITE_API_URL_LOCAL
+      }/backend/controladores/MembresiaClienteController.php?action=actualizarpago`,
       {
         method: "POST",
         body: JSON.stringify(datos),
@@ -92,7 +98,9 @@ const TablaPagos = () => {
     if (confirm("Deseas eliminar esta membresia?")) {
       try {
         const response = await fetch(
-          `http://${IP}/gimnasio/backend/controladores/MembresiaClienteController.php?action=eliminar`,
+          `${
+            import.meta.env.VITE_API_URL_LOCAL
+          }/backend/controladores/MembresiaClienteController.php?action=eliminar`,
           {
             method: "POST",
             body: JSON.stringify(id),

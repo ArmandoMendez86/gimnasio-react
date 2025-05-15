@@ -21,7 +21,7 @@ import { IP } from "../Utileria";
 import Resizer from "react-image-file-resizer";
 import AgregarProducto from "./AgregarProducto";
 
-const baseUrl = `http://${IP}:5173`;
+const baseUrl = `${import.meta.env.VITE_BASE_URL_LOCAL}`;
 const path = "/registro-producto";
 
 const TablaStock = ({ recargar }) => {
@@ -42,7 +42,7 @@ const TablaStock = ({ recargar }) => {
   const fetchStock = async () => {
     try {
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/StockController.php?action=listar`
+        `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/StockController.php?action=listar`
       );
       const data = await response.json();
       setStock(data);
@@ -80,7 +80,7 @@ const TablaStock = ({ recargar }) => {
     if (confirmar) {
       try {
         const response = await fetch(
-          `http://${IP}/gimnasio/backend/controladores/StockController.php?action=eliminar`,
+          `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/StockController.php?action=eliminar`,
           {
             method: "POST",
             body: JSON.stringify(id),
@@ -156,7 +156,7 @@ const TablaStock = ({ recargar }) => {
         formData.append("imagen", imagenArchivo);
 
         const response = await fetch(
-          `http://${IP}/gimnasio/backend/controladores/StockController.php?action=guardar`,
+          `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/StockController.php?action=guardar`,
           {
             method: "POST",
             body: formData,
@@ -191,7 +191,7 @@ const TablaStock = ({ recargar }) => {
         }
 
         const response = await fetch(
-          `http://${IP}/gimnasio/backend/controladores/StockController.php?action=editar`,
+          `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/StockController.php?action=editar`,
           {
             method: "POST",
             body: formData,

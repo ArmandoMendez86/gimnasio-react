@@ -18,7 +18,7 @@ const TablaMovimientoStock = ({ recargar, setRecargar }) => {
   const fetchMovimientosStock = async () => {
     try {
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/StockController.php?action=movimientostock`
+        `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/StockController.php?action=movimientostock`
       );
       const data = await response.json();
       setMovimientos(data);

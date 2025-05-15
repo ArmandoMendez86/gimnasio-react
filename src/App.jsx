@@ -11,20 +11,22 @@ import Pagos from "./paginas/Pagos";
 import RegistroCliente from "./paginas/RegistroCliente";
 import { useEffect, useState } from "react";
 import VistaConfiguracion from "./paginas/VistaConfiguracion";
-import { IP } from "./Utileria";
+import { IP, verificarUsuarioLogueado } from "./Utileria";
 import RegistroProducto from "./paginas/RegistroProducto";
 import Venta from "./paginas/Venta";
 import Reporte from "./paginas/Reporte";
 import Login from "./paginas/Login";
 
 // Componente auxiliar para controlar si mostrar la navegación
-const Layout = ({ config }) => {
+const Layout = ({ config, usuarioLogueado }) => {
   const location = useLocation();
 
   return (
     <div>
       {/* Solo muestra la navbar si no estás en /login */}
-      {location.pathname !== "/login" && <Navegacion config={config} />}
+      {location.pathname !== "/login" && (
+        <Navegacion config={config} usuarioLogueado={usuarioLogueado} />
+      )}
       <div style={{ marginTop: "50px" }}>
         <Routes>
           <Route path="/" element={<Inicio />} />
@@ -44,12 +46,18 @@ const Layout = ({ config }) => {
 
 function App() {
   const [config, setConfig] = useState(null);
+  const [usuarioLogueado, setUsuarioLogueado] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const datos = await verificarConfig();
+        const data = await verificarUsuarioLogueado();
         setConfig(datos);
+        if (data.loggedIn) {
+          setUsuarioLogueado(data);
+          console.log(data);
+        }
       } catch (err) {
         console.error("Error al cargar la configuración:", err);
       }
@@ -60,7 +68,9 @@ function App() {
 
   const verificarConfig = async () => {
     const response = await fetch(
-      `http://${IP}/gimnasio/backend/controladores/ConfiguracionController.php?action=listar`
+      `${
+        import.meta.env.VITE_API_URL_LOCAL
+      }/backend/controladores/ConfiguracionController.php?action=listar`
     );
     const respuesta = await response.json();
     const datos = respuesta[respuesta.length - 1];
@@ -69,7 +79,7 @@ function App() {
 
   return (
     <Router>
-      <Layout config={config} />
+      <Layout config={config} usuarioLogueado={usuarioLogueado} />
     </Router>
   );
 }

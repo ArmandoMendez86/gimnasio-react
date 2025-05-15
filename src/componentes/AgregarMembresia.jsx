@@ -34,7 +34,7 @@ const AgregarMembresia = ({ agregarMembresia }) => {
   const fetchClientes = async () => {
     try {
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/ClienteController.php?action=listar`
+        `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/ClienteController.php?action=listar`
       );
       const data = await response.json();
       setClientes(data);
@@ -46,7 +46,7 @@ const AgregarMembresia = ({ agregarMembresia }) => {
   const fetchMembresias = async () => {
     try {
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/MembresiaController.php?action=listar`
+        `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/MembresiaController.php?action=listar`
       );
       const data = await response.json();
       setTiposMembresia(data);

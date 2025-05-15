@@ -16,7 +16,7 @@ function PuntoDeVenta() {
   const fetchStock = async () => {
     try {
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/StockController.php?action=listar`
+        `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/StockController.php?action=listar`
       );
       const data = await response.json();
       setProductos(data);
@@ -106,7 +106,7 @@ function PuntoDeVenta() {
 
     try {
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/VentaController.php?action=guardar`,
+        `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/VentaController.php?action=guardar`,
         {
           method: "POST",
           body: JSON.stringify({

@@ -16,7 +16,7 @@ const AgregarCliente = () => {
 
   const verificarConfig = async () => {
     const response = await fetch(
-      `http://${IP}/gimnasio/backend/controladores/ConfiguracionController.php?action=listar`
+      `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/ConfiguracionController.php?action=listar`
     );
     const respuesta = await response.json();
     const datos = respuesta[respuesta.length - 1];
@@ -77,7 +77,7 @@ const AgregarCliente = () => {
       formData.append("imagen", imagenArchivo);
 
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/ClienteController.php?action=guardar`,
+        `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/ClienteController.php?action=guardar`,
         {
           method: "POST",
           body: formData,

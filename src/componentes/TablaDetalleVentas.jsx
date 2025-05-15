@@ -33,7 +33,7 @@ const TablaDetalleVentas = ({ recargar, setRecargar }) => {
   const fetchDetalleVentas = async () => {
     try {
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/DetalleVentaController.php?action=listar`
+        `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/DetalleVentaController.php?action=listar`
       );
       const data = await response.json();
       //console.log(data);
@@ -50,7 +50,7 @@ const TablaDetalleVentas = ({ recargar, setRecargar }) => {
     if (confirmar) {
       try {
         const response = await fetch(
-          `http://${IP}/gimnasio/backend/controladores/DetalleVentaController.php?action=eliminar`,
+          `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/DetalleVentaController.php?action=eliminar`,
           {
             method: "POST",
             body: JSON.stringify(datos),

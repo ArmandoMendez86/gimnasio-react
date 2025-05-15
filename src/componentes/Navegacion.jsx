@@ -1,7 +1,10 @@
-import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, Link } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
+import BtnCerrarSesion from "./BtnCerrarSesion";
+import { verificarUsuarioLogueado } from "../Utileria";
 
-function Navegacion({ config }) {
+function Navegacion({ config, usuarioLogueado }) {
   const location = useLocation();
 
   const getLinkClass = (path) => {
@@ -26,7 +29,7 @@ function Navegacion({ config }) {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
-          <Link className="navbar-brand" to="/">
+          <Link className="navbar-brand" to="/clientes">
             <img
               style={{
                 width: "100px",
@@ -60,25 +63,18 @@ function Navegacion({ config }) {
                 Membresías
               </Link>
             </li>
-            <li className="nav-item">
-              <Link
-                className={getLinkClass("/configuracion")}
-                to="/configuracion"
-              >
-                Administración
-              </Link>
-            </li>
+            {usuarioLogueado.perfil === "admin" && (
+              <li className="nav-item">
+                <Link
+                  className={getLinkClass("/configuracion")}
+                  to="/configuracion"
+                >
+                  Administración
+                </Link>
+              </li>
+            )}
           </ul>
-          <form className="d-flex" role="search">
-            <button
-              data-bs-toggle="tooltip"
-              title="Salir del sistema"
-              className="btn btn-danger"
-              type="submit"
-            >
-              <LogoutIcon />
-            </button>
-          </form>
+          {usuarioLogueado && <BtnCerrarSesion />}
         </div>
       </div>
     </nav>

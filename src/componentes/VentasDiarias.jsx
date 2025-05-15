@@ -79,7 +79,7 @@ const VentasDiarias = ({recargar}) => {
   const ventaProductos = async () => {
     try {
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/VentaController.php?action=ventaproductos`,
+        `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/VentaController.php?action=ventaproductos`,
         {
           method: "POST",
           body: JSON.stringify({ fecha: dayjs().format("YYYY-MM-DD") }),
@@ -96,7 +96,7 @@ const VentasDiarias = ({recargar}) => {
   const ventaServicios = async () => {
     try {
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/MembresiaClienteController.php?action=ventaservicios`,
+        `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/MembresiaClienteController.php?action=ventaservicios`,
         {
           method: "POST",
           body: JSON.stringify({ fecha: dayjs().format("YYYY-MM-DD") }),

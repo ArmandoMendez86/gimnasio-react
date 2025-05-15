@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { MaterialReactTable } from "material-react-table";
 import { MRT_Localization_ES } from "material-react-table/locales/es";
 import {
@@ -25,7 +25,7 @@ import InfoCliente from "./InfoCliente";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 
-const baseUrl = `http://${IP}:5173/`;
+const baseUrl = `${import.meta.env.VITE_BASE_URL_LOCAL}`;
 const path = "registro";
 
 const TablaClientes = ({ config }) => {
@@ -41,12 +41,18 @@ const TablaClientes = ({ config }) => {
 
   useEffect(() => {
     fetchClientes();
+ 
   }, []);
 
   const fetchClientes = async () => {
     try {
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/ClienteController.php?action=listar`
+        `${
+          import.meta.env.VITE_API_URL_LOCAL
+        }/backend/controladores/ClienteController.php?action=listar`,
+        {
+          credentials: "include",
+        }
       );
       const data = await response.json();
       setClientes(data);
@@ -77,7 +83,9 @@ const TablaClientes = ({ config }) => {
     if (confirmar) {
       try {
         const response = await fetch(
-          `http://${IP}/gimnasio/backend/controladores/ClienteController.php?action=eliminar`,
+          `${
+            import.meta.env.VITE_API_URL_LOCAL
+          }/backend/controladores/ClienteController.php?action=eliminar`,
           {
             method: "POST",
             body: JSON.stringify(id),
@@ -158,7 +166,9 @@ const TablaClientes = ({ config }) => {
         formData.append("imagen", imagenArchivo); // Enviar el archivo de imagen
 
         const response = await fetch(
-          `http://${IP}/gimnasio/backend/controladores/ClienteController.php?action=guardar`,
+          `${
+            import.meta.env.VITE_API_URL_LOCAL
+          }/backend/controladores/ClienteController.php?action=guardar`,
           {
             method: "POST",
             body: formData,
@@ -182,6 +192,14 @@ const TablaClientes = ({ config }) => {
         alert("El nombre y teléfono no pueden estar vacíos.");
         return;
       }
+
+      const checarCorreo = await verificarCorreo(clienteEditando.email);
+
+      if (checarCorreo.length > 0) {
+        alert("El correo ya existe!");
+        return;
+      }
+
       try {
         const formData = new FormData();
         formData.append("id", clienteEditando.id);
@@ -193,7 +211,9 @@ const TablaClientes = ({ config }) => {
         }
 
         const response = await fetch(
-          `http://${IP}/gimnasio/backend/controladores/ClienteController.php?action=editar`,
+          `${
+            import.meta.env.VITE_API_URL_LOCAL
+          }/backend/controladores/ClienteController.php?action=editar`,
           {
             method: "POST",
             body: formData,

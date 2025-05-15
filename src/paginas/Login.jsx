@@ -7,18 +7,41 @@ import {
   Typography,
   Paper,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [form, setForm] = useState({ email: "", password: "" });
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ usuario: "", password: "" });
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aquí va tu lógica de autenticación
-    console.log("Iniciando sesión con", form);
+
+    try {
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_API_URL_LOCAL
+        }/backend/controladores/LoginController.php?action=ingresar`,
+        {
+          method: "POST",
+          credentials: "include",
+          body: JSON.stringify(form),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      if (data.success) {
+        //navigate(data.redirect);
+        window.location.href = data.redirect;
+      }
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+    }
   };
 
   return (
@@ -52,8 +75,8 @@ const Login = () => {
               fullWidth
               label="Correo electrónico"
               variant="outlined"
-              name="email"
-              value={form.email}
+              name="usuario"
+              value={form.usuario}
               onChange={handleChange}
               sx={{
                 mb: 2,

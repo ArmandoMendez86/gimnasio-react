@@ -29,7 +29,7 @@ const TablaMembresias = () => {
   const fetchMembresias = async () => {
     try {
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/MembresiaController.php?action=listar`
+        `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/MembresiaController.php?action=listar`
       );
       const data = await response.json();
       setMembresias(data);
@@ -56,7 +56,7 @@ const TablaMembresias = () => {
     if (confirmar) {
       try {
         const response = await fetch(
-          `http://${IP}/gimnasio/backend/controladores/MembresiaController.php?action=eliminar`,
+          `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/MembresiaController.php?action=eliminar`,
           {
             method: "POST",
             body: JSON.stringify(id),
@@ -90,7 +90,7 @@ const TablaMembresias = () => {
 
       try {
         const response = await fetch(
-          `http://${IP}/gimnasio/backend/controladores/MembresiaController.php?action=guardar`,
+          `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/MembresiaController.php?action=guardar`,
           {
             method: "POST",
             body: JSON.stringify(tipoMembresia),
@@ -114,7 +114,7 @@ const TablaMembresias = () => {
       }
       try {
         const response = await fetch(
-          `http://${IP}/gimnasio/backend/controladores/MembresiaController.php?action=editar`,
+          `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/MembresiaController.php?action=editar`,
           {
             method: "POST",
             body: JSON.stringify(tipoMembresia),

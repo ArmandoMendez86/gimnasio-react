@@ -1,9 +1,8 @@
 <?php
-require_once '../config/Ip.php';
+$env = include __DIR__ . '/../../.env.php';
 $allowedOrigins = [
-    'http://localhost:5173',
-    'http://' . IP . ':5173',
-
+    $env['URL_LOCAL'],
+    $env['URL_EXT_LOCAL'],
 
 ];
 
@@ -17,6 +16,8 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Access-Control-Allow-Credentials: true");
 
 require_once '../modelos/Venta.php';
+$env = include __DIR__ . '/../../.env.php';
+Conexion::init($env);
 
 class VentaController
 {

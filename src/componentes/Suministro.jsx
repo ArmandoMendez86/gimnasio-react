@@ -25,7 +25,9 @@ const Suministro = ({ setRecargar }) => {
   const fetchProductos = async () => {
     try {
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/StockController.php?action=listar`
+        `${
+          import.meta.env.VITE_API_URL_LOCAL
+        }/backend/controladores/StockController.php?action=listar`
       );
       const data = await response.json();
       setProductos(data);
@@ -78,7 +80,9 @@ const Suministro = ({ setRecargar }) => {
   async function suministrarProducto(producto) {
     try {
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/VentaController.php?action=suministrar`,
+        `${
+          import.meta.env.VITE_API_URL_LOCAL
+        }/backend/controladores/VentaController.php?action=suministrar`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -125,12 +129,7 @@ const Suministro = ({ setRecargar }) => {
               })
             }
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Productos"
-                margin="normal"
-                
-              />
+              <TextField {...params} label="Productos" margin="normal" />
             )}
           />
           <div className="d-flex gap-2">

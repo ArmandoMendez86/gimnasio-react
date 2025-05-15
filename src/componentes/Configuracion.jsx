@@ -60,7 +60,7 @@ const Configuracion = () => {
       formData.append("imagen", imagenArchivo);
 
       const response = await fetch(
-        `http://${IP}/gimnasio/backend/controladores/ConfiguracionController.php?action=guardar`,
+        `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/ConfiguracionController.php?action=guardar`,
         {
           method: "POST",
           body: formData,
