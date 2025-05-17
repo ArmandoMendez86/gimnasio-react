@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import GraficoVentas from "./GraficoVentas";
-import { IP } from "../Utileria";
 import dayjs from "dayjs";
 import { formatearCantidad } from "../Utileria";
 

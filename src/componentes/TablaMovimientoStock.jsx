@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { MaterialReactTable } from "material-react-table";
 import { MRT_Localization_ES } from "material-react-table/locales/es";
-import { IP } from "../Utileria";
 import { Box } from "@mui/material";
 import dayjs from "dayjs";
 import "dayjs/locale/es";

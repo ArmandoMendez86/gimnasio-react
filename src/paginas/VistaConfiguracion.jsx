@@ -6,6 +6,7 @@ import TablaMovimientoStock from "../componentes/TablaMovimientoStock";
 import TablaStock from "../componentes/TablaStock";
 import VentasDiarias from "../componentes/VentasDiarias";
 import TablaDetalleVentas from "../componentes/TablaDetalleVentas";
+import TablaUsuarios from "../componentes/TablaUsuarios";
 
 function VistaConfiguracion() {
   const [recargar, setRecargar] = useState(false);
@@ -115,6 +116,20 @@ function VistaConfiguracion() {
             Ventas
           </button>
         </li>
+        <li className="nav-item" role="presentation">
+          <button
+            className="nav-link"
+            id="usuarios-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#usuarios-tab-pane"
+            type="button"
+            role="tab"
+            aria-controls="usuarios-tab-pane"
+            aria-selected="false"
+          >
+            Usuarios
+          </button>
+        </li>
       </ul>
       <div className="tab-content p-3" id="myTabContent">
         <div
@@ -179,6 +194,15 @@ function VistaConfiguracion() {
           tabIndex="0"
         >
           <TablaDetalleVentas recargar={recargar} setRecargar={setRecargar} />
+        </div>
+        <div
+          className="tab-pane fade border border-0"
+          id="usuarios-tab-pane"
+          role="tabpanel"
+          aria-labelledby="usuarios-tab"
+          tabIndex="0"
+        >
+          <TablaUsuarios />
         </div>
       </div>
     </div>

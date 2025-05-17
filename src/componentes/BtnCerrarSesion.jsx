@@ -19,8 +19,8 @@ const BtnCerrarSesion = () => {
       const data = await response.json();
 
       if (data.success) {
-        navigate("/login");
-        //window.location.href = "/login";
+        //navigate("/login");
+        window.location.href = "/login";
       } else {
         alert("Hubo un problema al cerrar la sesión.");
       }
@@ -31,7 +31,7 @@ const BtnCerrarSesion = () => {
 
   return (
     <button className="btn btn-danger btn-sm" onClick={cerrarSesion}>
-      Cerrar sesión
+      Salir
     </button>
   );
 };

@@ -20,22 +20,28 @@ class Login
 
     public function obtenerTodos()
     {
-        $query = "SELECT * FROM empleados ORDER BY fecha_registro DESC";
+        $query = "SELECT * FROM empleados";
         return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function agregar($id, $usuario, $password)
+    public function agregar($nombre, $apellido, $email, $perfil, $password)
     {
-        $query = "INSERT INTO empleados (id, usuario, password) VALUES (?, ?, ?)";
+        $query = "INSERT INTO empleados (nombre, apellido, email, perfil, password) VALUES (?, ?, ?, ?, ?)";
         $stmt = $this->db->prepare($query);
-        return $stmt->execute([$id, $usuario, $password]);
+        return $stmt->execute([$nombre, $apellido, $email, $perfil, $password]);
     }
 
-    public function editar($id, $nombre, $apellido, $telefono, $email, $direccion)
+    public function editar($id, $nombre, $apellido, $email, $perfil, $password)
     {
-        $query = "UPDATE empleados SET nombre = ?, apellido = ?, telefono = ?, email = ?, direccion = ? WHERE id = ?";
-        $stmt = $this->db->prepare($query);
-        return $stmt->execute([$nombre, $apellido, $telefono, $email, $direccion, $id]);
+        if ($password !== '') {
+            $query = "UPDATE empleados SET nombre = ?, apellido = ?, email = ?, perfil = ?, password = ? WHERE id = ?";
+            $stmt = $this->db->prepare($query);
+            return $stmt->execute([$nombre, $apellido, $email, $perfil, $password, $id]);
+        } else {
+            $query = "UPDATE empleados SET nombre = ?, apellido = ?, email = ?, perfil = ? WHERE id = ?";
+            $stmt = $this->db->prepare($query);
+            return $stmt->execute([$nombre, $apellido, $email, $perfil, $id]);
+        }
     }
 
     public function eliminar($id)

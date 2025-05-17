@@ -278,13 +278,16 @@ const InfoCliente = ({
           <h5 className="card-title">{cliente.nombre}</h5>
           <p className="card-text">{cliente.telefono}</p>
           <div className="mt-4 d-flex justify-content-center">
-            <QRCodeCanvas
-              value={cliente.telefono}
-              size={70}
-              bgColor="#ffffff"
-              fgColor="#000000"
-              level="Q"
-            />
+            <div style={{ padding: "10px" }}>
+              <QRCodeCanvas
+                value={cliente.telefono}
+                size={70}
+                bgColor="#ffffff"
+                fgColor="#000000"
+                level="H"
+                 includeMargin={true}
+              />
+            </div>
           </div>
         </div>
       </div>

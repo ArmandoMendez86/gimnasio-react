@@ -13,7 +13,6 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteTwoTone";
 import SaveIcon from "@mui/icons-material/Add";
-import { IP } from "../Utileria";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import { useMemo } from "react";
@@ -33,7 +32,9 @@ const TablaDetalleVentas = ({ recargar, setRecargar }) => {
   const fetchDetalleVentas = async () => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/DetalleVentaController.php?action=listar`
+        `${
+          import.meta.env.VITE_API_URL_LOCAL
+        }/backend/controladores/DetalleVentaController.php?action=listar`
       );
       const data = await response.json();
       //console.log(data);
@@ -50,7 +51,9 @@ const TablaDetalleVentas = ({ recargar, setRecargar }) => {
     if (confirmar) {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/DetalleVentaController.php?action=eliminar`,
+          `${
+            import.meta.env.VITE_API_URL_LOCAL
+          }/backend/controladores/DetalleVentaController.php?action=eliminar`,
           {
             method: "POST",
             body: JSON.stringify(datos),
@@ -187,7 +190,7 @@ const TablaDetalleVentas = ({ recargar, setRecargar }) => {
               textTransform: "uppercase",
               fontSize: "13px",
               fontWeight: "bold",
-              color:'white',
+              color: "white",
               backgroundColor: "#343a40",
             },
           }}

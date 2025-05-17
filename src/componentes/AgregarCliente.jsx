@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { TextField, Button, Box, Typography, Container } from "@mui/material";
 import Resizer from "react-image-file-resizer";
-import { IP, verificarCorreo } from "../Utileria";
+import {verificarCorreo } from "../Utileria";
 import { toJpeg } from "html-to-image";
 import { QRCodeCanvas } from "qrcode.react";
 

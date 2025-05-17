@@ -9,68 +9,70 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Add";
 import { formatearCantidad } from "../Utileria";
 
-const TablaMembresias = () => {
-  const [membresias, setMembresias] = useState([]);
-  const [filtro, setFiltro] = useState(""); // Filtro para búsqueda
-  const [tipoMembresia, setTipoMembresia] = useState(null); // Cliente que estamos editando o creando
-  const [openDialog, setOpenDialog] = useState(false); // Estado para abrir/cerrar el modal
-  const [nuevaMembresia, setNuevaMembresia] = useState(false); // Estado para determinar si es nuevo o edición
+const TablaUsuarios = () => {
+  const [usuarios, setUsuarios] = useState([]);
+  const [tipoUsuario, setTipoUsuario] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [nuevoUsuario, setNuevoUsuario] = useState(false);
 
   useEffect(() => {
-    fetchMembresias();
+    fetchUsuarios();
   }, []);
 
-  const fetchMembresias = async () => {
+  const fetchUsuarios = async () => {
     try {
       const response = await fetch(
         `${
           import.meta.env.VITE_API_URL_LOCAL
-        }/backend/controladores/MembresiaController.php?action=listar`
+        }/backend/controladores/LoginController.php?action=listar`
       );
       const data = await response.json();
-      setMembresias(data);
+      setUsuarios(data);
     } catch (error) {
-      console.error("Error al obtener membresías:", error);
+      console.error("Error al obtener usuarios:", error);
     }
   };
 
-  const handleAbrirDialog = (membresia = null) => {
-    if (membresia) {
-      setTipoMembresia(membresia);
-      setNuevaMembresia(false);
+  const handleAbrirDialog = (usuario = null) => {
+    if (usuario) {
+      usuario.password = "";
+      setTipoUsuario(usuario);
+      setNuevoUsuario(false);
     } else {
-      setTipoMembresia(membresia);
-      setNuevaMembresia(true);
+      setTipoUsuario(usuario);
+      setNuevoUsuario(true);
     }
     setOpenDialog(true);
   };
 
   const handleEliminar = async (id) => {
     const confirmar = window.confirm(
-      "¿Estás seguro de que deseas eliminar esta membresía?"
+      "¿Estás seguro de que deseas eliminar este usuario?"
     );
     if (confirmar) {
       try {
         const response = await fetch(
           `${
             import.meta.env.VITE_API_URL_LOCAL
-          }/backend/controladores/MembresiaController.php?action=eliminar`,
+          }/backend/controladores/LoginController.php?action=eliminar`,
           {
             method: "POST",
             body: JSON.stringify(id),
           }
         );
         const data = await response.json();
-        if (data.error) {
-          alert(data.error);
-        } else {
-          fetchMembresias();
+        if (data.success) {
+          alert("Usuario eliminado!");
+          fetchUsuarios();
         }
       } catch (error) {
         console.error("Error al guardar cliente:", error);
@@ -78,17 +80,23 @@ const TablaMembresias = () => {
     }
   };
 
-  const handleGuardarMembresia = async () => {
-    if (nuevaMembresia) {
-      if (tipoMembresia === null) return;
+  const handleGuardarUsuario = async () => {
+    if (nuevoUsuario) {
+      if (tipoUsuario === null) return;
 
       if (
-        !tipoMembresia.tipo ||
-        tipoMembresia.tipo.trim() === "" ||
-        !tipoMembresia.precio ||
-        tipoMembresia.precio.trim() === ""
+        !tipoUsuario.nombre ||
+        tipoUsuario.nombre.trim() === "" ||
+        !tipoUsuario.apellido ||
+        tipoUsuario.apellido.trim() === "" ||
+        !tipoUsuario.password ||
+        tipoUsuario.password.trim() === "" ||
+        !tipoUsuario.email ||
+        tipoUsuario.email.trim() === ""
       ) {
-        alert("El tipo y precio no pueden estar vacíos.");
+        alert(
+          "El nombre, apellido, email y contraseña no pueden estar vacíos."
+        );
         return;
       }
 
@@ -96,43 +104,47 @@ const TablaMembresias = () => {
         const response = await fetch(
           `${
             import.meta.env.VITE_API_URL_LOCAL
-          }/backend/controladores/MembresiaController.php?action=guardar`,
+          }/backend/controladores/LoginController.php?action=guardar`,
           {
             method: "POST",
-            body: JSON.stringify(tipoMembresia),
+            body: JSON.stringify(tipoUsuario),
           }
         );
         const data = await response.json();
 
-        fetchMembresias();
+        fetchUsuarios();
       } catch (error) {
-        console.error("Error al guardar membresía:", error);
+        console.error("Error al guardar usuario:", error);
       }
     } else {
       if (
-        !tipoMembresia.tipo ||
-        tipoMembresia.tipo.trim() === "" ||
-        !tipoMembresia.precio ||
-        tipoMembresia.precio.trim() === ""
+        !tipoUsuario.nombre ||
+        tipoUsuario.nombre.trim() === "" ||
+        !tipoUsuario.apellido ||
+        tipoUsuario.apellido.trim() === "" ||
+        !tipoUsuario.email ||
+        tipoUsuario.email.trim() === ""
       ) {
-        alert("El tipo y precio no pueden estar vacíos.");
+        alert(
+          "El nombre, apellido, email y contraseña no pueden estar vacíos."
+        );
         return;
       }
       try {
         const response = await fetch(
           `${
             import.meta.env.VITE_API_URL_LOCAL
-          }/backend/controladores/MembresiaController.php?action=editar`,
+          }/backend/controladores/LoginController.php?action=editar`,
           {
             method: "POST",
-            body: JSON.stringify(tipoMembresia),
+            body: JSON.stringify(tipoUsuario),
           }
         );
         const data = await response.json();
 
-        fetchMembresias();
+        fetchUsuarios();
       } catch (error) {
-        console.error("Error al guardar membresía:", error);
+        console.error("Error al guardar usuario:", error);
       }
     }
 
@@ -145,18 +157,20 @@ const TablaMembresias = () => {
       header: "ID",
     },
     {
-      accessorKey: "tipo",
-      header: "Tipo",
+      accessorKey: "nombre",
+      header: "Nombre",
     },
     {
-      accessorKey: "precio",
-      header: "Precio",
-
-      Cell: ({ cell }) => formatearCantidad(cell.getValue()),
+      accessorKey: "apellido",
+      header: "Apellido",
     },
     {
-      accessorKey: "duracion_dias",
-      header: "Duración/Días",
+      accessorKey: "email",
+      header: "Correo",
+    },
+    {
+      accessorKey: "perfil",
+      header: "Perfil",
     },
 
     {
@@ -194,7 +208,7 @@ const TablaMembresias = () => {
         onClick={() => handleAbrirDialog()}
         startIcon={<SaveIcon />}
       >
-        Nueva
+        Usuario
       </Button>
 
       {/* 📋 Tabla con paginación y filtros */}
@@ -207,7 +221,7 @@ const TablaMembresias = () => {
       >
         <MaterialReactTable
           columns={columns}
-          data={membresias}
+          data={usuarios}
           initialState={{
             pagination: { pageSize: 5 },
             columnVisibility: { id: false },
@@ -250,37 +264,65 @@ const TablaMembresias = () => {
       {/* 📝 Modal de Edición o Creación */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>
-          {nuevaMembresia ? "Registrar Membresía" : "Editar Membresía"}
+          {nuevoUsuario ? "Registrar Usuario" : "Editar Usuario"}
         </DialogTitle>
         <DialogContent>
           <TextField
-            label="Tipo"
+            label="Nombre"
             fullWidth
             margin="dense"
-            value={tipoMembresia?.tipo || ""}
+            value={tipoUsuario?.nombre || ""}
             onChange={(e) =>
-              setTipoMembresia({ ...tipoMembresia, tipo: e.target.value })
+              setTipoUsuario({ ...tipoUsuario, nombre: e.target.value })
             }
           />
           <TextField
-            label="Precio"
+            label="Apellido"
             fullWidth
             margin="dense"
-            type="number"
-            value={tipoMembresia?.precio || ""}
+            value={tipoUsuario?.apellido || ""}
             onChange={(e) =>
-              setTipoMembresia({ ...tipoMembresia, precio: e.target.value })
+              setTipoUsuario({ ...tipoUsuario, apellido: e.target.value })
             }
           />
           <TextField
-            label="Duración/Días"
+            label="Correo"
             fullWidth
             margin="dense"
-            value={tipoMembresia?.duracion_dias || ""}
+            value={tipoUsuario?.email || ""}
             onChange={(e) =>
-              setTipoMembresia({
-                ...tipoMembresia,
-                duracion_dias: e.target.value,
+              setTipoUsuario({
+                ...tipoUsuario,
+                email: e.target.value,
+              })
+            }
+          />
+          <InputLabel id="perfil-label">Perfil</InputLabel>
+          <Select
+            fullWidth
+            labelId="perfil-label"
+            value={tipoUsuario?.perfil || ""}
+            label="Perfil"
+            onChange={(e) =>
+              setTipoUsuario({
+                ...tipoUsuario,
+                perfil: e.target.value,
+              })
+            }
+          >
+            <MenuItem value="admin">Administrador</MenuItem>
+            <MenuItem value="vendedor">Vendedor</MenuItem>
+          </Select>
+          <TextField
+            label="Contraseña"
+            fullWidth
+            margin="dense"
+            type="password"
+            value={tipoUsuario?.password || ""}
+            onChange={(e) =>
+              setTipoUsuario({
+                ...tipoUsuario,
+                password: e.target.value,
               })
             }
           />
@@ -294,11 +336,11 @@ const TablaMembresias = () => {
             Cancelar
           </Button>
           <Button
-            onClick={handleGuardarMembresia}
+            onClick={handleGuardarUsuario}
             variant="contained"
             color="warning"
           >
-            {nuevaMembresia ? "Crear" : "Guardar"}
+            {nuevoUsuario ? "Crear" : "Guardar"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -306,4 +348,4 @@ const TablaMembresias = () => {
   );
 };
 
-export default TablaMembresias;
+export default TablaUsuarios;

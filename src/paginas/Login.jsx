@@ -36,8 +36,9 @@ const Login = () => {
       );
       const data = await response.json();
       if (data.success) {
-        //navigate(data.redirect);
+        //navigate(data.redirect)
         window.location.href = data.redirect;
+        //console.log(data)
       }
     } catch (error) {
       console.error("Error al iniciar sesión:", error);

@@ -41,7 +41,6 @@ class LoginController
             session_set_cookie_params([
                 'lifetime' => 0,
                 'path' => '/',
-                'domain' => 'localhost', // o 192.168.10.6
                 'secure' => false,
                 'httponly' => true,
                 'samesite' => 'Lax',
@@ -79,6 +78,52 @@ class LoginController
             echo json_encode(['loggedIn' => false]);
         }
     }
+
+    public function listar()
+    {
+        echo json_encode($this->modelo->obtenerTodos());
+    }
+
+    public function guardar()
+    {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $password_hash = password_hash($data['password'], PASSWORD_DEFAULT);
+        $resultado = $this->modelo->agregar(
+            $data['nombre'],
+            $data['apellido'],
+            $data['email'],
+            $data['perfil'],
+            $password_hash,
+        );
+        echo json_encode(["success" => $resultado]);
+    }
+
+    public function editar()
+    {
+        $data = json_decode(file_get_contents("php://input"), true);
+        if ($data['password'] !== '') {
+            $password_hash = password_hash($data['password'], PASSWORD_DEFAULT);
+        } else {
+            $password_hash = '';
+        }
+        $resultado = $this->modelo->editar(
+            $data['id'],
+            $data['nombre'],
+            $data['apellido'],
+            $data['email'],
+            $data['perfil'],
+            $password_hash,
+
+        );
+        echo json_encode(["success" => $resultado]);
+    }
+
+    public function eliminar()
+    {
+        $id = json_decode(file_get_contents("php://input"), true);
+        $resultado = $this->modelo->eliminar($id);
+        echo json_encode(["success" => $resultado]);
+    }
 }
 
 // Manejo de peticiones
@@ -87,7 +132,14 @@ $controller = new LoginController();
 
 if ($action == "ingresar") {
     $controller->ingresar();
-}
-if ($action == "sesion") {
+} elseif ($action == "listar") {
+    $controller->listar();
+} elseif ($action == "guardar") {
+    $controller->guardar();
+} elseif ($action == "editar") {
+    $controller->editar();
+} elseif ($action == "eliminar") {
+    $controller->eliminar();
+} elseif ($action == "sesion") {
     $controller->sesion();
 }

@@ -17,7 +17,6 @@ import AgregarCliente from "./AgregarCliente";
 import AgregarMembresia from "./AgregarMembresia";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
-import { IP } from "../Utileria";
 import { useMemo } from "react";
 import { formatearCantidad } from "../Utileria";
 
@@ -26,7 +25,7 @@ const TablaPagos = ({ usuarioLogueado }) => {
   const [checked, setChecked] = useState(false);
   const [dialogCliente, setDialogCliente] = useState(false);
   const [dialogMembresia, setDialogMembresia] = useState(false);
-  console.log(usuarioLogueado);
+
   useEffect(() => {
     fetchMembresiasClientes();
   }, [checked]);
@@ -137,6 +136,7 @@ const TablaPagos = ({ usuarioLogueado }) => {
       accessorKey: "precio",
       header: "Precio",
       size: 1,
+      Cell: ({ cell }) => formatearCantidad(cell.getValue()),
     },
     {
       accessorKey: "descuento",
@@ -147,6 +147,7 @@ const TablaPagos = ({ usuarioLogueado }) => {
       accessorKey: "precio_neto",
       header: "Neto",
       size: 1,
+      Cell: ({ cell }) => formatearCantidad(cell.getValue()),
     },
     {
       accessorKey: "fecha_inicio",
@@ -158,6 +159,8 @@ const TablaPagos = ({ usuarioLogueado }) => {
     {
       accessorKey: "fecha_fin",
       header: "Termina",
+      enableColumnFilter: false,
+      enableGlobalFilter: false,
 
       Cell: ({ cell }) =>
         dayjs(cell.getValue()).locale("es").format("DD/MMM/YYYY"),
@@ -254,6 +257,7 @@ const TablaPagos = ({ usuarioLogueado }) => {
           }}
           enablePagination={true}
           enableColumnFilters={true}
+          enableGlobalFilter={true}
           localization={MRT_Localization_ES}
           muiTableBodyCellProps={({ column }) => ({
             sx: {
@@ -273,7 +277,7 @@ const TablaPagos = ({ usuarioLogueado }) => {
               }),
               ...(column.id === "descuento" && {
                 textAlign: "center",
-                color: "red",
+                color: "#9b9090",
               }),
               ...(column.id === "precio_neto" && {
                 textAlign: "center",

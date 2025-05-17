@@ -40,7 +40,6 @@ const verificarUsuarioLogueado = async () => {
   }
 };
 
-// ip config
-const IP = "192.168.10.6";
 
-export { verificarCorreo, IP, formatearCantidad, verificarUsuarioLogueado };
+
+export { verificarCorreo, formatearCantidad, verificarUsuarioLogueado };

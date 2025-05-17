@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { TextField, Button, Box, Typography, Container } from "@mui/material";
 import Resizer from "react-image-file-resizer";
 import Upload from "@mui/icons-material/Upload";
-import { IP } from "../Utileria";
+
 
 const Configuracion = () => {
   const [config, setConfig] = useState({

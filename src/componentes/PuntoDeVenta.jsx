@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { IP } from "../Utileria";
+import { useState, useEffect, useCallback } from "react";
 import dayjs from "dayjs";
+import { formatearCantidad } from "../Utileria";
 
 function PuntoDeVenta() {
   const [productos, setProductos] = useState([]); // Datos de la base de datos
@@ -16,7 +16,9 @@ function PuntoDeVenta() {
   const fetchStock = async () => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/StockController.php?action=listar`
+        `${
+          import.meta.env.VITE_API_URL_LOCAL
+        }/backend/controladores/StockController.php?action=listar`
       );
       const data = await response.json();
       setProductos(data);
@@ -106,7 +108,9 @@ function PuntoDeVenta() {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL_LOCAL}/backend/controladores/VentaController.php?action=guardar`,
+        `${
+          import.meta.env.VITE_API_URL_LOCAL
+        }/backend/controladores/VentaController.php?action=guardar`,
         {
           method: "POST",
           body: JSON.stringify({
@@ -166,7 +170,7 @@ function PuntoDeVenta() {
                       {producto.nombre_producto}
                     </h5>
                     <p className="card-text text-muted text-center">
-                      ${producto.precio_unitario}
+                      {formatearCantidad(producto.precio_unitario)}
                     </p>
                     <div className="mt-auto d-flex justify-content-end">
                       <button

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { MaterialReactTable } from "material-react-table";
 import { MRT_Localization_ES } from "material-react-table/locales/es";
 import {
@@ -17,9 +17,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Add";
 import ClearIcon from "@mui/icons-material/Clear";
 import { QRCodeCanvas } from "qrcode.react";
-import { IP } from "../Utileria";
 import Resizer from "react-image-file-resizer";
 import AgregarProducto from "./AgregarProducto";
+import { formatearCantidad } from "../Utileria";
 
 const baseUrl = `${import.meta.env.VITE_BASE_URL_LOCAL}`;
 const path = "/registro-producto";
@@ -229,6 +229,7 @@ const TablaStock = ({ recargar }) => {
       accessorKey: "precio_unitario",
       header: "Precio",
       size: 1,
+      Cell: ({ cell }) => formatearCantidad(cell.getValue()),
     },
     {
       accessorKey: "img",

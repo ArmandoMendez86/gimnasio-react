@@ -11,14 +11,17 @@ import Pagos from "./paginas/Pagos";
 import RegistroCliente from "./paginas/RegistroCliente";
 import { useEffect, useState } from "react";
 import VistaConfiguracion from "./paginas/VistaConfiguracion";
-import { IP, verificarUsuarioLogueado } from "./Utileria";
+import { verificarUsuarioLogueado } from "./Utileria";
 import RegistroProducto from "./paginas/RegistroProducto";
 import Venta from "./paginas/Venta";
 import Reporte from "./paginas/Reporte";
 import Login from "./paginas/Login";
+import RutaPrivada from "./componentes/RutaPrivada";
+import RutaPublica from "./componentes/RutaPublica";
+import NoEncontrado from "./componentes/NoEncontrado";
 
 // Componente auxiliar para controlar si mostrar la navegación
-const Layout = ({ config, usuarioLogueado }) => {
+const Layout = ({ config, usuarioLogueado, loading }) => {
   const location = useLocation();
 
   return (
@@ -29,18 +32,83 @@ const Layout = ({ config, usuarioLogueado }) => {
       )}
       <div style={{ marginTop: "50px" }}>
         <Routes>
-          <Route path="/" element={<Inicio />} />
-          <Route path="/clientes" element={<Clientes config={config} />} />
-          <Route path="/venta" element={<Venta />} />
+          <Route
+            path="/"
+            element={
+              <RutaPrivada usuarioLogueado={usuarioLogueado} loading={loading}>
+                <Inicio />
+              </RutaPrivada>
+            }
+          />
+          <Route
+            path="/clientes"
+            element={
+              <RutaPrivada usuarioLogueado={usuarioLogueado} loading={loading}>
+                <Clientes config={config} />
+              </RutaPrivada>
+            }
+          />
+          <Route
+            path="/venta"
+            element={
+              <RutaPrivada usuarioLogueado={usuarioLogueado} loading={loading}>
+                <Venta />
+              </RutaPrivada>
+            }
+          />
           <Route
             path="/pagos"
-            element={<Pagos usuarioLogueado={usuarioLogueado} />}
+            element={
+              <RutaPrivada usuarioLogueado={usuarioLogueado} loading={loading}>
+                <Pagos usuarioLogueado={usuarioLogueado} />
+              </RutaPrivada>
+            }
           />
-          <Route path="/registro" element={<RegistroCliente />} />
-          <Route path="/registro-producto" element={<RegistroProducto />} />
-          <Route path="/configuracion" element={<VistaConfiguracion />} />
-          <Route path="/reporte" element={<Reporte />} />
-          <Route path="/login" element={<Login />} />
+          <Route
+            path="/registro"
+            element={
+              <RutaPrivada usuarioLogueado={usuarioLogueado} loading={loading}>
+                <RegistroCliente />
+              </RutaPrivada>
+            }
+          />
+          <Route
+            path="/registro-producto"
+            element={
+              <RutaPrivada usuarioLogueado={usuarioLogueado} loading={loading}>
+                <RegistroProducto />
+              </RutaPrivada>
+            }
+          />
+          <Route
+            path="/configuracion"
+            element={
+              <RutaPrivada usuarioLogueado={usuarioLogueado} loading={loading}>
+                <VistaConfiguracion/>
+              </RutaPrivada>
+            }
+          />
+          <Route
+            path="/reporte"
+            element={
+              <RutaPrivada usuarioLogueado={usuarioLogueado} loading={loading}>
+                <Reporte />
+              </RutaPrivada>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <RutaPublica usuarioLogueado={usuarioLogueado} loading={loading}>
+                <Login />
+              </RutaPublica>
+            }
+          />
+          {/* Ruta comodín */}
+          {/*  <Route
+            path="*"
+            element={<NoEncontrado usuarioLogueado={usuarioLogueado} />}
+          /> */}
         </Routes>
       </div>
     </div>
@@ -50,6 +118,7 @@ const Layout = ({ config, usuarioLogueado }) => {
 function App() {
   const [config, setConfig] = useState(null);
   const [usuarioLogueado, setUsuarioLogueado] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,9 +127,10 @@ function App() {
         const data = await verificarUsuarioLogueado();
         setConfig(datos);
         setUsuarioLogueado(data);
-        //console.log(data)
       } catch (err) {
         console.error("Error al cargar la configuración:", err);
+      } finally {
+        setLoading(false); // <- Muy importante
       }
     };
 
@@ -80,7 +150,15 @@ function App() {
 
   return (
     <Router>
-      <Layout config={config} usuarioLogueado={usuarioLogueado} />
+      {loading ? (
+        <div>Cargando...</div>
+      ) : (
+        <Layout
+          config={config}
+          usuarioLogueado={usuarioLogueado}
+          loading={loading}
+        />
+      )}
     </Router>
   );
 }

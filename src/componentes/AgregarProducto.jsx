@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { TextField, Button, Box, Typography, Container } from "@mui/material";
 import Resizer from "react-image-file-resizer";
-import { IP } from "../Utileria";
 
 const AgregarProducto = () => {
   const [producto, setProducto] = useState({

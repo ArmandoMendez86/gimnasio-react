@@ -18,7 +18,7 @@ import SaveIcon from "@mui/icons-material/Add";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import ClearIcon from "@mui/icons-material/Clear";
 import { QRCodeCanvas } from "qrcode.react";
-import { IP, verificarCorreo } from "../Utileria";
+import {verificarCorreo } from "../Utileria";
 import Resizer from "react-image-file-resizer";
 import InfoCliente from "./InfoCliente";
 
@@ -193,12 +193,12 @@ const TablaClientes = ({ config }) => {
         return;
       }
 
-      const checarCorreo = await verificarCorreo(clienteEditando.email);
+    /*   const checarCorreo = await verificarCorreo(clienteEditando.email);
 
       if (checarCorreo.length > 0) {
         alert("El correo ya existe!");
         return;
-      }
+      } */
 
       try {
         const formData = new FormData();

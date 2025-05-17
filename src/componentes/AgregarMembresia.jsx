@@ -13,7 +13,6 @@ import {
   Input,
 } from "@mui/material";
 import dayjs from "dayjs";
-import { IP } from "../Utileria";
 
 const AgregarMembresia = ({ agregarMembresia }) => {
   const [registroMembresia, setRegistroMembresia] = useState({
